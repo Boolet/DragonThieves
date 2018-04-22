@@ -9,7 +9,11 @@ public class SoundEmitter : MonoBehaviour {
 	[SerializeField] float speedFactor = 1f;
 	[SerializeField] float weightFactor = 1f;
 
+	//references go here
 
+	void Awake(){
+
+	}
 
 	void OnEnable(){
 		emitters.Add(this);
@@ -20,7 +24,8 @@ public class SoundEmitter : MonoBehaviour {
 	}
 
 	public float GetCurrentVolume(){
-
+		//will switch to references when I have them
+		return SpeedComponent(Vector3.zero) * WeightComponent(0);
 	}
 
 	float SpeedComponent(Vector3 velocity){

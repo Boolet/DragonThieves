@@ -4,13 +4,26 @@ using UnityEngine;
 
 public class TreasureCollect : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public float treasure;
+
+    public Rigidbody rb;    // Use this for initialization
+    public GameObject player;
+    void Start () {
+        treasure = 0.0f;
+        rb = GetComponent<Rigidbody>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+   
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Treasure")
+        {
+            Destroy(collision.gameObject);
+            treasure++;
+        }
+    }
 }

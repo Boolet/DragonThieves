@@ -1198,6 +1198,7 @@ GameObject:
   - component: {fileID: 114810785190770480}
   - component: {fileID: 114660801480354870}
   - component: {fileID: 114776098558911826}
+  - component: {fileID: 114134538031668324}
   m_Layer: 0
   m_Name: ThirdPersonController
   m_TagString: Untagged
@@ -2498,6 +2499,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 521b611700410be45810047f0a74e899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114134538031668324
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1888733307581496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1590678366, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Animator: {fileID: 95526151062675678}
+  m_ParameterSendBits: 63
+  param0: 
+  param1: 
+  param2: 
+  param3: 
+  param4: 
+  param5: 
 --- !u!114 &114660801480354870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2541,16 +2561,16 @@ MonoBehaviour:
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TransformSyncMode: 3
-  m_SendInterval: 0.1
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.03846154
   m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
+  m_RotationSyncCompression: 1
+  m_SyncSpin: 1
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
   m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
+  m_InterpolateRotation: 2
+  m_InterpolateMovement: 2
 --- !u!114 &114810785190770480
 MonoBehaviour:
   m_ObjectHideFlags: 1

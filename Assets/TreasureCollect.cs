@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class TreasureCollect : MonoBehaviour {
-
+	public Text text;
     public float treasure;
-
+	public int collected = 0;
     //public Rigidbody rb;    // Use this for initialization
     public GameObject player;
     public GameObject treasureObj;
@@ -26,6 +26,10 @@ public class TreasureCollect : MonoBehaviour {
                 treasureObj.SetActive(false);
             }
         }
+		if (collected == 3) {
+			text.text = "You Win!!";
+
+		}
     }
 
 
@@ -36,6 +40,7 @@ public class TreasureCollect : MonoBehaviour {
             canGrab = true;
             treasureObj = collision.gameObject;
             collision.gameObject.SetActive(false);
+			collected++;
         }
      
     }

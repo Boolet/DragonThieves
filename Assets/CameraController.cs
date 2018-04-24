@@ -13,17 +13,18 @@ public class CameraController : MonoBehaviour {
     void Start()
     {
         //Calculate and store the offset value by getting the distance between the player's position and camera's position.
-        //offset = transform.position - player.transform.position;
-
-        //transform.position += offset;
+//        offset = transform.position - player.transform.position;
+//
+//        transform.position = offset;
+		player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // LateUpdate is called after Update each frame
 
-    void Update()
+    void LateUpdate()
     {
-        transform.position = new Vector3(target.position.x, transform.position.y, target.position.z);
-        transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
+        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+        //transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
     }
     //void Update()
     //{

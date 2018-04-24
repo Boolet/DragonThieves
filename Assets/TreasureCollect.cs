@@ -27,11 +27,17 @@ public class TreasureCollect : MonoBehaviour {
             }
         }
     }
-   
+
+
     void OnTriggerEnter(Collider collision)
     {
-        canGrab = true;
-        treasureObj = collision.gameObject;
+        if (collision.gameObject.tag == "Treasure")
+        {
+            canGrab = true;
+            treasureObj = collision.gameObject;
+            collision.gameObject.SetActive(false);
+        }
+     
     }
     void OnTriggerExit(Collider collision)
     {

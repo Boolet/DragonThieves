@@ -9,12 +9,10 @@ public class SoundEmitter : MonoBehaviour {
 	[SerializeField] float speedFactor = 1f;
 	[SerializeField] float weightFactor = 1f;
 
-	ThirdPersonCharacter characterMovement;
 	TreasureCollect collector;
 	Rigidbody body;
 
 	void Awake(){
-		characterMovement = GetComponent<ThirdPersonCharacter>();
 		collector = GetComponent<TreasureCollect>();
 		body = GetComponent<Rigidbody>();
 	}

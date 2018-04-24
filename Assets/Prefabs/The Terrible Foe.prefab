@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 95469889985419034}
   - component: {fileID: 54555221415516358}
   - component: {fileID: 136242130758501026}
-  - component: {fileID: 114397688827139402}
+  - component: {fileID: 114657732498953558}
   - component: {fileID: 114093273388420656}
   - component: {fileID: 114934319800384536}
   - component: {fileID: 114590196300258564}
@@ -2513,25 +2513,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33c89d41f55941e9853894248f2b0aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114397688827139402
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1181639152622262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MovingTurnSpeed: 360
-  m_StationaryTurnSpeed: 180
-  m_JumpPower: 6
-  m_GravityMultiplier: 2
-  m_RunCycleLegOffset: 0.2
-  m_MoveSpeedMultiplier: 1
-  m_AnimSpeedMultiplier: 1
-  m_GroundCheckDistance: 0.3
 --- !u!114 &114590196300258564
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2543,6 +2524,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c109c7c19195450c81936e9a5edf75c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114657732498953558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1181639152622262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5751f62b377aae944a0543e6f5ac4d4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MovingTurnSpeed: 360
+  m_StationaryTurnSpeed: 180
+  m_JumpPower: 12
+  m_GravityMultiplier: 2
+  m_RunCycleLegOffset: 0.2
+  m_MoveSpeedMultiplier: 1
+  m_AnimSpeedMultiplier: 1
+  m_GroundCheckDistance: 0.1
 --- !u!114 &114934319800384536
 MonoBehaviour:
   m_ObjectHideFlags: 1

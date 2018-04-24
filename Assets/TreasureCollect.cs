@@ -6,34 +6,35 @@ public class TreasureCollect : MonoBehaviour {
 
     public float treasure;
 
-    public Rigidbody rb;    // Use this for initialization
+    //public Rigidbody rb;    // Use this for initialization
     public GameObject player;
-    private GameObject treasureObj;
-    private bool canGrab = false;
+    public GameObject treasureObj;
+    public bool canGrab;
     void Start () {
         treasure = 0.0f;
-        rb = GetComponent<Rigidbody>();
+        canGrab = false;
+       // rb = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (canGrab)
         {
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Pick Up"))
             {
                 treasure++;
-                Destroy(treasureObj);
+                treasureObj.SetActive(false);
             }
         }
     }
    
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         canGrab = true;
         treasureObj = collision.gameObject;
     }
-    void OnCollisionExit(Collision collision)
+    void OnTriggerExit(Collider collision)
     {
-        canGrab = false;        
+        canGrab = false;
     }
 }

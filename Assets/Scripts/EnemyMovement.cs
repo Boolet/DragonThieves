@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(EnemyTargeting))]
 [RequireComponent(typeof(SoundEmitter))]
+[RequireComponent(typeof(UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter))]
 public class EnemyMovement : MonoBehaviour {
 
 	[SerializeField] float runningSpeed = 10f;
@@ -16,17 +17,19 @@ public class EnemyMovement : MonoBehaviour {
 
 	EnemyTargeting targetingSystem;
 	SoundEmitter selfSounds;
+	UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter characterController;
 
 	// Use this for initialization
 	void Start () {
 		targetingSystem = GetComponent<EnemyTargeting>();
 		selfSounds = GetComponent<SoundEmitter>();
+		characterController = GetComponent<UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void FixedUpdate(){
 		UpdateTarget();
 		UpdateSpeed();
+		Move();
 	}
 
 	void UpdateTarget(){
@@ -37,12 +40,15 @@ public class EnemyMovement : MonoBehaviour {
 	//the enemy should run when there is a very loud noise, but walk when the noises are quieter
 
 	void UpdateSpeed(){
-		if (selfSounds.GetCurrentVolume() > targetVolume)
+		if (selfSounds.GetCurrentVolume() * selfSoundFactor > targetVolume)
 			currentSpeed = walkingSpeed;
 		else
 			currentSpeed = runningSpeed;
 	}
 
-
+	void Move(){
+		Vector3 moveDirection = targetPosition - transform.position;
+		characterController.Move(moveDirection, false, false);
+	}
 
 }

@@ -29,6 +29,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
 
+		[HideInInspector] public float movementSpeedLastFrame = 0f;
+
 
 		void Start()
 		{
@@ -55,6 +57,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
+			movementSpeedLastFrame = m_ForwardAmount;
 
 			ApplyExtraTurnRotation();
 

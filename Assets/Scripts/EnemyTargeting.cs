@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(SoundDetector))]
 public class EnemyTargeting : MonoBehaviour {
 
-	Vector3 currentTarget;
+	//will need to eventually add an enemy memory so that it doesn't just immediately lose focus if the player stands still
+	SoundEmitter currentTarget;
 	float currentVolume;
 
 	SoundDetector detector;
@@ -17,11 +18,17 @@ public class EnemyTargeting : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		TargetLoudest();
+	}
+
+	void TargetLoudest(){
+		KeyValuePair<SoundEmitter, float> noisemaker = detector.GetLoudest();
+		currentTarget = noisemaker.Key;
+		currentVolume = noisemaker.Value;
 	}
 
 	public Vector3 GetCurrentTarget(){
-		return currentTarget;
+		return currentTarget.transform.position;
 	}
 
 	public float GetCurrentVolume(){

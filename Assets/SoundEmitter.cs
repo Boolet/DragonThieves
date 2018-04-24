@@ -9,10 +9,10 @@ public class SoundEmitter : MonoBehaviour {
 	[SerializeField] float speedFactor = 1f;
 	[SerializeField] float weightFactor = 1f;
 
-	//references go here
+	TreasureCollect collector;
 
 	void Awake(){
-
+		collector = GetComponent<TreasureCollect>();
 	}
 
 	void OnEnable(){

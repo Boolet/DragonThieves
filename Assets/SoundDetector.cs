@@ -33,4 +33,8 @@ public class SoundDetector : MonoBehaviour {
 			perceivedVolumes.Sort(CompareVolumes);
 		}
 	}
+
+	public SoundEmitter GetLoudest(){
+		return perceivedVolumes[0].Key;
+	}
 }

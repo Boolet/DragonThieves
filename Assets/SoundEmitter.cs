@@ -9,10 +9,14 @@ public class SoundEmitter : MonoBehaviour {
 	[SerializeField] float speedFactor = 1f;
 	[SerializeField] float weightFactor = 1f;
 
+	ThirdPersonCharacter characterMovement;
 	TreasureCollect collector;
+	Rigidbody body;
 
 	void Awake(){
+		characterMovement = GetComponent<ThirdPersonCharacter>();
 		collector = GetComponent<TreasureCollect>();
+		body = GetComponent<Rigidbody>();
 	}
 
 	void OnEnable(){
@@ -25,7 +29,9 @@ public class SoundEmitter : MonoBehaviour {
 
 	public float GetCurrentVolume(){
 		//will switch to references when I have them
-		return SpeedComponent(Vector3.zero) * WeightComponent(0);
+		Vector3 velocity = body != null ? body.velocity : Vector3.zero;
+		float volume = SpeedComponent(velocity) * WeightComponent(1);
+		return volume;
 	}
 
 	float SpeedComponent(Vector3 velocity){

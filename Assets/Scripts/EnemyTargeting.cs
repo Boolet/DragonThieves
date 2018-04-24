@@ -15,11 +15,6 @@ public class EnemyTargeting : MonoBehaviour {
 	void Start () {
 		detector = GetComponent<SoundDetector>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		TargetLoudest();
-	}
 
 	void TargetLoudest(){
 		KeyValuePair<SoundEmitter, float> noisemaker = detector.GetLoudest();
@@ -28,6 +23,8 @@ public class EnemyTargeting : MonoBehaviour {
 	}
 
 	public Vector3 GetCurrentTarget(){
+		TargetLoudest();
+		//print(currentTarget.gameObject.name + " is making " + currentVolume + " noise");
 		return currentTarget.transform.position;
 	}
 

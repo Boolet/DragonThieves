@@ -252,6 +252,8 @@ GameObject:
   - component: {fileID: 114934319800384536}
   - component: {fileID: 114590196300258564}
   - component: {fileID: 114161434908953072}
+  - component: {fileID: 114847041262941292}
+  - component: {fileID: 114991784593287932}
   m_Layer: 0
   m_Name: The Terrible Foe
   m_TagString: Untagged
@@ -2543,6 +2545,38 @@ MonoBehaviour:
   m_MoveSpeedMultiplier: 1
   m_AnimSpeedMultiplier: 1
   m_GroundCheckDistance: 0.3
+--- !u!114 &114847041262941292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1181639152622262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 170
+    i1: 94
+    i2: 17
+    i3: 234
+    i4: 228
+    i5: 17
+    i6: 244
+    i7: 72
+    i8: 123
+    i9: 28
+    i10: 248
+    i11: 54
+    i12: 109
+    i13: 40
+    i14: 85
+    i15: 133
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114934319800384536
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2556,6 +2590,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speedFactor: 0.01
   weightFactor: 1
+--- !u!114 &114991784593287932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1181639152622262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!136 &136242130758501026
 CapsuleCollider:
   m_ObjectHideFlags: 1

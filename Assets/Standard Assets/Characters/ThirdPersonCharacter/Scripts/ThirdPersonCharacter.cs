@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace UnityStandardAssets.Characters.ThirdPerson
 {
 	[RequireComponent(typeof(Rigidbody))]
 	[RequireComponent(typeof(CapsuleCollider))]
 	[RequireComponent(typeof(Animator))]
-	public class ThirdPersonCharacter : MonoBehaviour
+	public class ThirdPersonCharacter : NetworkBehaviour
 	{
+        
 		[SerializeField] float m_MovingTurnSpeed = 360;
 		[SerializeField] float m_StationaryTurnSpeed = 180;
 		[SerializeField] float m_JumpPower = 12f;
@@ -29,6 +31,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
 
+		[HideInInspector] public float movementSpeedLastFrame = 0f;
+
 
 		void Start()
 		{
@@ -38,6 +42,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_CapsuleHeight = m_Capsule.height;
 			m_CapsuleCenter = m_Capsule.center;
 
+
+
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
 		}
@@ -45,7 +51,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public void Move(Vector3 move, bool crouch, bool jump)
 		{
-
+            if (!isLocalPlayer)
+                return;
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -55,6 +62,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
+			movementSpeedLastFrame = m_ForwardAmount;
 
 			ApplyExtraTurnRotation();
 
@@ -117,8 +125,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		void UpdateAnimator(Vector3 move)
 		{
-			// update the animator parameters
-			m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
+            
+            // update the animator parameters
+            m_Animator.SetFloat("Forward", m_ForwardAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetFloat("Turn", m_TurnAmount, 0.1f, Time.deltaTime);
 			m_Animator.SetBool("Crouch", m_Crouching);
 			m_Animator.SetBool("OnGround", m_IsGrounded);

@@ -194,6 +194,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &731915093
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 4.4114313
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 3.006339
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 4.256026
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4465828022572500, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: aa5e11eae411f4487b1cf8366d285585, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &2057087403
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,5 +262,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

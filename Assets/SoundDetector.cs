@@ -5,15 +5,10 @@ using UnityEngine;
 public class SoundDetector : MonoBehaviour {
 
 	List<KeyValuePair<SoundEmitter, float>> perceivedVolumes = new List<KeyValuePair<SoundEmitter, float>>();
+	bool wasUpdatedThisFrame = false;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	void Update(){
+		wasUpdatedThisFrame = false;
 	}
 
 	float PerceivedVolume(SoundEmitter emitter){
@@ -32,9 +27,12 @@ public class SoundDetector : MonoBehaviour {
 			perceivedVolumes.Add(new KeyValuePair<SoundEmitter, float>(emitter, perceivedVolume));
 			perceivedVolumes.Sort(CompareVolumes);
 		}
+		wasUpdatedThisFrame = true;
 	}
 
-	public SoundEmitter GetLoudest(){
-		return perceivedVolumes[0].Key;
+	public KeyValuePair<SoundEmitter, float> GetLoudest(){
+		if (!wasUpdatedThisFrame)
+			UpdatePerceivedVolumes();
+		return perceivedVolumes[0];
 	}
 }

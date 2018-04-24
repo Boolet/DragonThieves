@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(EnemyTargeting))]
 [RequireComponent(typeof(SoundEmitter))]
-[RequireComponent(typeof(ThirdPersonCharacter))]
+[RequireComponent(typeof(ThirdPersonCharacterLocal))]
 public class EnemyMovement : MonoBehaviour {
 
 	[SerializeField] float runningSpeed = 10f;
@@ -17,13 +17,13 @@ public class EnemyMovement : MonoBehaviour {
 
 	EnemyTargeting targetingSystem;
 	SoundEmitter selfSounds;
-	ThirdPersonCharacter characterController;
+	ThirdPersonCharacterLocal characterController;
 
 	// Use this for initialization
 	void Start () {
 		targetingSystem = GetComponent<EnemyTargeting>();
 		selfSounds = GetComponent<SoundEmitter>();
-		characterController = GetComponent<ThirdPersonCharacter>();
+		characterController = GetComponent<ThirdPersonCharacterLocal>();
 	}
 
 	void FixedUpdate(){

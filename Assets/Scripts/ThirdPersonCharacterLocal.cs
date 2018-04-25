@@ -196,7 +196,6 @@ using UnityEngine;
 			}
 		}
 
-
 		void CheckGroundStatus()
 		{
 			RaycastHit hitInfo;

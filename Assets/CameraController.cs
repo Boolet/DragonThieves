@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour {
 
     void LateUpdate()
     {
-        transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+        //transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
         //transform.rotation = Quaternion.LookRotation(target.position - transform.position, Vector3.up);
     }
     //void Update()

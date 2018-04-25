@@ -13,11 +13,18 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         private Vector3 m_CamForward;             // The current forward direction of the camera
         private Vector3 m_Move;
         private bool m_Jump;                      // the world-relative desired move direction, calculated from the camForward and user input.
+		public Rigidbody rb;
+		public float bounceForce = 10f;
+		public void FireSpring()
+		{
 
+			rb.AddForce (bounceForce * transform.up, ForceMode.VelocityChange);
+
+		}
         
         private void Start()
         {
-           
+			rb = GetComponent<Rigidbody> ();
 
             // get the third person character ( this should never be null due to require component )
             m_Character = GetComponent<ThirdPersonCharacter>();

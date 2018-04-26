@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ah_scene.unity
     guid: d09e4414ef9e1ba49a6b97dcf71cf43a
+  - enabled: 1
+    path: Assets/Avi's Scene.unity
+    guid: 9c436bdf7f6e84f32b717891af1a35c9

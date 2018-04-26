@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4160749401759892}
   - component: {fileID: 33354404104897854}
   - component: {fileID: 23124299114208834}
+  - component: {fileID: 65018362349745786}
   m_Layer: 2
   m_Name: Avi's Ghosty
   m_TagString: Untagged
@@ -39,6 +40,7 @@ GameObject:
   - component: {fileID: 114751170416133126}
   - component: {fileID: 114162423913002674}
   - component: {fileID: 114984886099017752}
+  - component: {fileID: 114244266987765906}
   m_Layer: 2
   m_Name: Avi's Ghost Domino
   m_TagString: Untagged
@@ -66,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1704046037038524}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.244, y: 0, z: 0}
+  m_LocalPosition: {x: -2.2666924, y: -2.693231e-18, z: 0.18193851}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4160749401759892}
@@ -114,6 +116,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1634352019018816}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65018362349745786
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1634352019018816}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.9, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114162423913002674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -135,6 +149,21 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114244266987765906
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1704046037038524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d418c335abdd4fd6a28e69b09ca7149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectedColliders:
+    serializedVersion: 2
+    m_Bits: 768
+  dominoCollider: {fileID: 65018362349745786}
 --- !u!114 &114751170416133126
 MonoBehaviour:
   m_ObjectHideFlags: 1

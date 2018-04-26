@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114361491839656322}
   - component: {fileID: 114592340060925592}
   - component: {fileID: 114038198156684630}
+  - component: {fileID: 114808331094565748}
   m_Layer: 9
   m_Name: Avi's Domino Root
   m_TagString: Domino
@@ -240,3 +241,15 @@ MonoBehaviour:
   m_MovementThreshold: 0.001
   m_InterpolateRotation: 0.5
   m_InterpolateMovement: 0.5
+--- !u!114 &114808331094565748
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002993439616274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15760c875a21d4c3e9c37ee1021ffef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dominoBody: {fileID: 54798751146880532}

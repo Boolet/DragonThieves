@@ -21,6 +21,20 @@ public class DominoSpawner : NetworkBehaviour {
 		}
 	}
 
+	void AdaptiveRaycast(){
+		RaycastHit hit;
+		if(Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, 200)){
+			if ((hit.collider.gameObject.layer & spawnTargets) != 0){
+				//hit a spawnable area
+				if (hit.normal == gravityDirection * -1){
+					CmdSpawnDomino(hit.point);
+				}
+			} else if((hit.collider.gameObject.layer & dominoTargets) != 0){
+				//hit a domino
+			}
+		}
+	}
+
 	void TrySpawnDomino(){
 		RaycastHit hit;
 		if(Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, 200, spawnTargets.value)){

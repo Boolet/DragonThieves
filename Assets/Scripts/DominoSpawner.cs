@@ -18,7 +18,7 @@ public class DominoSpawner : NetworkBehaviour {
 	[SerializeField] float placeDistance = 10f;
 
 	float currentRotationAngle = 0f;
-	GameObject ghostInstance;
+	[SerializeField] GameObject ghostInstance;
 	OverlapDetector detector;
 	MeshRenderer ghostMesh;
 	Material goodGhostMaterial;
@@ -34,10 +34,11 @@ public class DominoSpawner : NetworkBehaviour {
 		CmdSpawnGhost();
 	}
 
-	[Command]
+
 	void CmdSpawnGhost(){
-		ghostInstance = Instantiate(dominoGhost);
-		NetworkServer.Spawn(ghostInstance);
+		//ghostInstance = Instantiate(dominoGhost);
+		//NetworkServer.Spawn(ghostInstance);
+		ghostInstance.transform.SetParent(null);
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
 		goodGhostMaterial = ghostMesh.material;
 		detector = ghostInstance.GetComponent<OverlapDetector>();
@@ -122,8 +123,8 @@ public class DominoSpawner : NetworkBehaviour {
 	[Command]
 	void CmdSpawnDomino(Vector3 point){
 		Quaternion currentRotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
-		GameObject obj = Instantiate(dominoPrefab.gameObject, point, currentRotation);
-		dominoPrefab.Gravity = gravityDirection;	//wrong
-		NetworkServer.Spawn(obj);
+		DominoGravity grav = Instantiate(dominoPrefab, point, currentRotation);
+		grav.Gravity = gravityDirection;
+		NetworkServer.Spawn(grav.gameObject);
 	}
 }

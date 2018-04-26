@@ -31,13 +31,6 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void Start(){
-		CmdSpawnGhost();
-	}
-
-
-	void CmdSpawnGhost(){
-		//ghostInstance = Instantiate(dominoGhost);
-		//NetworkServer.Spawn(ghostInstance);
 		ghostInstance.transform.SetParent(null);
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
 		goodGhostMaterial = ghostMesh.material;
@@ -68,7 +61,8 @@ public class DominoSpawner : NetworkBehaviour {
 		if (Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, placeDistance)){
 			if (((1 << hit.collider.gameObject.layer) & spawnTargets.value) != 0){
 				//hit a spawnable area
-				if (Vector3.Angle(gravityDirection * -1, hit.normal) <= surfaceTolerance){
+				if (Vector3.Angle(gravityDirection * -1, hit.normal) <= surfaceTolerance || 
+					Vector3.Angle(gravityDirection, hit.normal) <= surfaceTolerance){
 					behavior = DominoSpawnBehavior.Spawn;
 				}
 			} else if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0){
@@ -103,6 +97,10 @@ public class DominoSpawner : NetworkBehaviour {
 		ghostInstance.transform.rotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
 		if (currentMode != DominoSpawnBehavior.Hover){
 			ghostInstance.transform.position = targetPoint;
+			//experiment vvv
+			if(Vector3.Angle(targetNormal, gravityDirection) < 90f){
+				ghostInstance.transform.localRotation *= Quaternion.AngleAxis(180, Vector3.right);
+			}
 		} else{
 			ghostInstance.transform.position = cameraObject.transform.position + cameraObject.transform.forward * placeDistance;
 		}

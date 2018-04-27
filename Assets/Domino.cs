@@ -13,14 +13,13 @@ public class Domino : MonoBehaviour {
 	void Start(){
 		MoveToOffset();
 		DominoTracker.RegisterDomino(this);
-		spawnPoint = dominoBody.transform.position;
-		spawnRotation = dominoBody.transform.rotation;
+		spawnPoint = transform.position;
+		spawnRotation = transform.rotation;
 		dominoBody = GetComponent<Rigidbody>();
 	}
 
 	void MoveToOffset(){
 		transform.position = positionOffset.position;
-		Destroy(positionOffset.gameObject);
 	}
 
 	void OnDestroy(){

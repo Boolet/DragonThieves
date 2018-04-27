@@ -323,8 +323,7 @@ MonoBehaviour:
   cameraObject: {fileID: 20701495854447510}
   dominoPrefab: {fileID: 114688389508056614, guid: a15bac403dcb34f96a595c417ad21e40,
     type: 2}
-  dominoGhost: {fileID: 1704046037038524, guid: 733cd3c6bc2d1477ca62200c2cae6525,
-    type: 2}
+  ghostInstance: {fileID: 1871999629669786}
   badGhostMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
   gravityDirection: {x: 0, y: -1, z: 0}
   surfaceTolerance: 2
@@ -336,7 +335,6 @@ MonoBehaviour:
     m_Bits: 512
   rotationSensitivity: 2
   placeDistance: 10
-  ghostInstance: {fileID: 1871999629669786}
 --- !u!114 &114639087108654546
 MonoBehaviour:
   m_ObjectHideFlags: 1

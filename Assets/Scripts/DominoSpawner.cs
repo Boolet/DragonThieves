@@ -8,7 +8,7 @@ public class DominoSpawner : NetworkBehaviour {
 
 	[SerializeField] Camera cameraObject;
 	[SerializeField] DominoGravity dominoPrefab;
-	[SerializeField] GameObject dominoGhost;
+	[SerializeField] GameObject ghostInstance;
 	[SerializeField] Material badGhostMaterial;
 	[SerializeField] Vector3 gravityDirection = Vector3.down;
 	[SerializeField] float surfaceTolerance = 2f;
@@ -18,7 +18,6 @@ public class DominoSpawner : NetworkBehaviour {
 	[SerializeField] float placeDistance = 10f;
 
 	float currentRotationAngle = 0f;
-	[SerializeField] GameObject ghostInstance;
 	OverlapDetector detector;
 	MeshRenderer ghostMesh;
 	Material goodGhostMaterial;
@@ -61,13 +60,14 @@ public class DominoSpawner : NetworkBehaviour {
 		if (Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, placeDistance)){
 			if (((1 << hit.collider.gameObject.layer) & spawnTargets.value) != 0){
 				//hit a spawnable area
-				if (Vector3.Angle(gravityDirection * -1, hit.normal) <= surfaceTolerance || 
-					Vector3.Angle(gravityDirection, hit.normal) <= surfaceTolerance){
+				if (Vector3.Angle(gravityDirection * -1, hit.normal) <= surfaceTolerance
+					|| Vector3.Angle(gravityDirection, hit.normal) <= surfaceTolerance){
 					behavior = DominoSpawnBehavior.Spawn;
 				}
 			} else if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0){
 				//hit a domino
-				if (hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == gravityDirection.normalized){
+				if (hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == gravityDirection.normalized
+					|| hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == -gravityDirection.normalized){
 					behavior = DominoSpawnBehavior.Delete;
 				}
 			}
@@ -122,7 +122,11 @@ public class DominoSpawner : NetworkBehaviour {
 	void CmdSpawnDomino(Vector3 point){
 		Quaternion currentRotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
 		DominoGravity grav = Instantiate(dominoPrefab, point, currentRotation);
-		grav.Gravity = gravityDirection;
+		grav.Gravity = -gravityDirection;
+		if(Vector3.Angle(targetNormal, gravityDirection) > 90f){
+			grav.transform.localRotation *= Quaternion.AngleAxis(180, Vector3.right);
+			grav.Gravity = gravityDirection;
+		}
 		NetworkServer.Spawn(grav.gameObject);
 	}
 }

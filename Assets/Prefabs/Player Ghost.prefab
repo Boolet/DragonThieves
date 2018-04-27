@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraObject: {fileID: 20701495854447510}
-  dominoPrefab: {fileID: 114038198156684630, guid: baeff2a14da8e4deca77c3f3e6115e93,
+  dominoPrefab: {fileID: 114688389508056614, guid: a15bac403dcb34f96a595c417ad21e40,
     type: 2}
   dominoGhost: {fileID: 1704046037038524, guid: 733cd3c6bc2d1477ca62200c2cae6525,
     type: 2}

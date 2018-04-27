@@ -17,7 +17,7 @@ public class DominoGravity : MonoBehaviour {
 	void FixedUpdate () {
 		if (gravityOrientation == Vector3.zero)
 			return;
-		body.AddForce(gravityOrientation.normalized * Physics.gravity.magnitude * Time.fixedDeltaTime);
+		body.AddForce(gravityOrientation.normalized * Physics.gravity.magnitude, ForceMode.Acceleration);
 	}
 
 	public Vector3 Gravity{

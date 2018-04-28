@@ -11,7 +11,8 @@ public class Domino : MonoBehaviour {
 	Vector3 spawnPoint;
 
 	void Start(){
-		MoveToOffset();
+		if(positionOffset != null)
+			MoveToOffset();
 		DominoTracker.RegisterDomino(this);
 		spawnPoint = transform.position;
 		spawnRotation = transform.rotation;

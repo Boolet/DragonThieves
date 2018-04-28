@@ -35,4 +35,9 @@ public class StartChain : MonoBehaviour {
     {
         rb.AddForce(x, y, z);
     }
+
+    public void Reset()
+    {
+        canReset = false;
+    }
 }

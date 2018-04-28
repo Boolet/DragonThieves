@@ -6,6 +6,17 @@ using UnityEngine.Networking;
 //goes on player parent
 public class DominoSpawner : NetworkBehaviour {
 
+	//keeps track of who is in charge of each of the available orientations
+	static Dictionary<Vector3, DominoSpawner> directionDict = new Dictionary<Vector3, DominoSpawner>(){
+		{Vector3.down, null},
+		{Vector3.right, null},
+		{Vector3.forward, null}
+	};
+
+	static HashSet<Vector3> playerPlacementDirections = new HashSet<Vector3>{
+		Vector3.down, Vector3.right, Vector3.forward
+	};
+
 	[SerializeField] Camera cameraObject;
 	[SerializeField] DominoGravity dominoPrefab;
 	[SerializeField] GameObject ghostInstance;
@@ -30,10 +41,21 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void Start(){
+		TakeAvailablePlacement();
 		ghostInstance.transform.SetParent(null);
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
 		goodGhostMaterial = ghostMesh.material;
 		detector = ghostInstance.GetComponent<OverlapDetector>();
+	}
+
+	void TakeAvailablePlacement(){
+	}
+
+	void OnDestroy(){
+
+	}
+
+	void RelinquishPlacement(){
 	}
 
 	void Update () {

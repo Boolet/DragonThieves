@@ -6,15 +6,8 @@ using UnityEngine.Networking;
 //goes on player parent
 public class DominoSpawner : NetworkBehaviour {
 
-	//keeps track of who is in charge of each of the available orientations
-	static Dictionary<Vector3, DominoSpawner> directionDict = new Dictionary<Vector3, DominoSpawner>(){
-		{Vector3.down, null},
-		{Vector3.right, null},
-		{Vector3.forward, null}
-	};
-
 	static HashSet<Vector3> playerPlacementDirections = new HashSet<Vector3>{
-		Vector3.down, Vector3.right, Vector3.forward
+		Vector3.down, Vector3.left, Vector3.back
 	};
 
 	[SerializeField] Camera cameraObject;
@@ -49,13 +42,20 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void TakeAvailablePlacement(){
+		foreach (Vector3 v in playerPlacementDirections){
+			gravityDirection = v;
+			playerPlacementDirections.Remove(v);
+			return;
+		}
+		throw new KeyNotFoundException("No elements in placement direction set to pick!");
 	}
 
 	void OnDestroy(){
-
+		RelinquishPlacement();
 	}
 
 	void RelinquishPlacement(){
+		playerPlacementDirections.Add(gravityDirection);
 	}
 
 	void Update () {
@@ -115,14 +115,20 @@ public class DominoSpawner : NetworkBehaviour {
 			ghostMesh.material = badGhostMaterial;
 	}
 
+	Quaternion DominoRotation(bool reversed){
+		return Quaternion.AngleAxis(currentRotationAngle, Vector3.up)
+			* Quaternion.FromToRotation(Vector3.up, -gravityDirection * (reversed?1:-1));
+	}
+
+	void SetTransformToDominoPlacement(Transform t, bool reversed){
+		t.rotation = DominoRotation(reversed);
+	}
+
 	void PlaceGhost(){
-		ghostInstance.transform.rotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
+		//ghostInstance.transform.rotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
+		SetTransformToDominoPlacement(ghostInstance.transform, Vector3.Angle(targetNormal, gravityDirection) > 90f);
 		if (currentMode != DominoSpawnBehavior.Hover){
 			ghostInstance.transform.position = targetPoint;
-			//experiment vvv
-			if(Vector3.Angle(targetNormal, gravityDirection) < 90f){
-				ghostInstance.transform.localRotation *= Quaternion.AngleAxis(180, Vector3.right);
-			}
 		} else{
 			ghostInstance.transform.position = cameraObject.transform.position + cameraObject.transform.forward * placeDistance;
 		}
@@ -142,13 +148,9 @@ public class DominoSpawner : NetworkBehaviour {
 
 	[Command]
 	void CmdSpawnDomino(Vector3 point){
-		Quaternion currentRotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
-		DominoGravity grav = Instantiate(dominoPrefab, point, currentRotation);
-		grav.Gravity = -gravityDirection;
-		if(Vector3.Angle(targetNormal, gravityDirection) > 90f){
-			grav.transform.localRotation *= Quaternion.AngleAxis(180, Vector3.right);
-			grav.Gravity = gravityDirection;
-		}
+		bool reversed = Vector3.Angle(targetNormal, gravityDirection) > 90f;
+		DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
+		grav.Gravity = gravityDirection * (reversed?1:-1);
 		NetworkServer.Spawn(grav.gameObject);
 	}
 }

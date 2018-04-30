@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DominoGravity : MonoBehaviour {
 
-	Vector3 gravityOrientation = Vector3.zero;
+	[SerializeField] Vector3 gravityOrientation = Vector3.zero;
 
 	Rigidbody body;
 

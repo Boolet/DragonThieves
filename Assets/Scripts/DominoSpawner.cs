@@ -9,6 +9,7 @@ public class DominoSpawner : NetworkBehaviour {
 	static HashSet<Vector3> playerPlacementDirections = new HashSet<Vector3>{
 		Vector3.down, Vector3.left, Vector3.back
 	};
+	public static bool fixedGravityMode = false;
 
 	[SerializeField] Camera cameraObject;
 	[SerializeField] DominoGravity dominoPrefab;
@@ -34,7 +35,8 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void Start(){
-		TakeAvailablePlacement();
+		if(!fixedGravityMode)
+			TakeAvailablePlacement();
 		ghostInstance.transform.SetParent(null);
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
 		goodGhostMaterial = ghostMesh.material;
@@ -125,7 +127,6 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void PlaceGhost(){
-		//ghostInstance.transform.rotation = Quaternion.AngleAxis(currentRotationAngle, gravityDirection);
 		SetTransformToDominoPlacement(ghostInstance.transform, Vector3.Angle(targetNormal, gravityDirection) > 90f);
 		if (currentMode != DominoSpawnBehavior.Hover){
 			ghostInstance.transform.position = targetPoint;

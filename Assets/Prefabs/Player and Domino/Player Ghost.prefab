@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraObject: {fileID: 20701495854447510}
-  moveSpeed: 2
+  moveSpeed: 8
   lookSensitivity: 4
   maxUp: 90
   maxDown: -90

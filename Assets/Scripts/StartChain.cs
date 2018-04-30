@@ -33,7 +33,7 @@ public class StartChain : MonoBehaviour {
 	}
     void KnockDomino(float x, float y, float z)
     {
-        rb.AddForce(x, y, z);
+		rb.AddRelativeForce(x, y, z);
     }
 
     public void Reset()

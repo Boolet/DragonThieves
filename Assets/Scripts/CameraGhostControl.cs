@@ -9,8 +9,8 @@ public class CameraGhostControl : NetworkBehaviour {
 	[SerializeField] Camera cameraObject;
 	[SerializeField] float moveSpeed = 2f;
 	[SerializeField] float lookSensitivity = 4f;
-	[SerializeField] float maxUp = 90f;
-	[SerializeField] float maxDown = -90f;
+	[SerializeField] float maxUp = 85f;
+	[SerializeField] float maxDown = -85f;
 
 	bool m_cursorIsLocked = true;
 
@@ -57,14 +57,17 @@ public class CameraGhostControl : NetworkBehaviour {
 		float xRot = Input.GetAxis("Mouse Y") * lookSensitivity;
 
 		transform.rotation *= Quaternion.Euler (0f, yRot, 0f);
-		cameraObject.transform.rotation *= Quaternion.Euler (-xRot, 0f, 0f);
+		cameraObject.transform.localRotation *= Quaternion.Euler (-xRot, 0f, 0f);
 
-		cameraObject.transform.rotation = ClampRotationAroundXAxis(cameraObject.transform.rotation);
+		cameraObject.transform.localRotation = ClampRotationAroundXAxis(cameraObject.transform.localRotation);
 	}
 
 	//courtesy of Unity's Standard Assets
 	Quaternion ClampRotationAroundXAxis(Quaternion q)
 	{
+		
+
+
 		q.x /= q.w;
 		q.y /= q.w;
 		q.z /= q.w;

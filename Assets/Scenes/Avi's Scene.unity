@@ -210,7 +210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &119929535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,8 +250,8 @@ MonoBehaviour:
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
-  m_OfflineScene: 
-  m_OnlineScene: 
+  m_OfflineScene: Menu Scene
+  m_OnlineScene: Avi's Scene
   m_SpawnPrefabs:
   - {fileID: 1344954551852282, guid: a15bac403dcb34f96a595c417ad21e40, type: 2}
   m_CustomConfig: 0

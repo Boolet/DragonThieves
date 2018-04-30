@@ -316,8 +316,8 @@ MonoBehaviour:
   cameraObject: {fileID: 20701495854447510}
   moveSpeed: 8
   lookSensitivity: 4
-  maxUp: 90
-  maxDown: -90
+  maxUp: 85
+  maxDown: -85
 --- !u!114 &114277989485907546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -353,7 +353,7 @@ MonoBehaviour:
     type: 2}
   ghostInstance: {fileID: 1871999629669786}
   badGhostMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
-  gravityDirection: {x: 0, y: -1, z: 0}
+  gravityDirection: {x: -1, y: 0, z: 0}
   surfaceTolerance: 2
   spawnTargets:
     serializedVersion: 2

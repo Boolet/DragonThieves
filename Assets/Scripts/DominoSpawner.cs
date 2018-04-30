@@ -118,8 +118,7 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	Quaternion DominoRotation(bool reversed){
-		return Quaternion.AngleAxis(currentRotationAngle, Vector3.up)
-			* Quaternion.FromToRotation(Vector3.up, -gravityDirection * (reversed?1:-1));
+		return Quaternion.FromToRotation(Vector3.up, -gravityDirection * (reversed?1:-1)) * Quaternion.AngleAxis(currentRotationAngle, Vector3.up);
 	}
 
 	void SetTransformToDominoPlacement(Transform t, bool reversed){
@@ -143,15 +142,15 @@ public class DominoSpawner : NetworkBehaviour {
 
 	void TrySpawnDomino(){
 		if (currentMode == DominoSpawnBehavior.Spawn){
-			CmdSpawnDomino(targetPoint);
+			CmdSpawnDomino(targetPoint, targetNormal, gravityDirection);
 		}
 	}
 
 	[Command]
-	void CmdSpawnDomino(Vector3 point){
-		bool reversed = Vector3.Angle(targetNormal, gravityDirection) > 90f;
+	void CmdSpawnDomino(Vector3 point, Vector3 normal, Vector3 gravity){
+		bool reversed = Vector3.Angle(normal, gravity) > 90f;
 		DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
-		grav.Gravity = gravityDirection * (reversed?1:-1);
+		grav.Gravity = gravity * (reversed?1:-1);
 		NetworkServer.Spawn(grav.gameObject);
 	}
 }

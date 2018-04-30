@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResetButton : MonoBehaviour {
+
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.R)){
+			Reset();
+		}
+	}
+
 	public void Reset(){
 		DominoTracker.Reset();
 	}

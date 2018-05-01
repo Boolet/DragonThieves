@@ -12,12 +12,13 @@ public class StartMenu : MonoBehaviour {
 	[SerializeField] RectTransform joinMenu;
 	[SerializeField] RectTransform hostMenu;
 
-	string targetAddress;
-	int targetPort;
+    [SerializeField] NetworkManager NetworkMgr;
+    [SerializeField] InputField addressField;
 
-	public void HostMenuButton()
+    public void HostMenuButton()
     {
-		//NetworkManager.singleton.ServerChangeScene();
+        NetworkMgr.StartHost();
+        NetworkMgr.ServerChangeScene("Proto Grav Level");
     }
 
 	public void ModeButton(){
@@ -44,25 +45,24 @@ public class StartMenu : MonoBehaviour {
 		Application.Quit();
 	}
 
-	public void SetConnectionAddress(string address){
-		targetAddress = address;
+	public void SetConnectionAddress(){
+        NetworkMgr.networkAddress = addressField.text;
 	}
 
 	public void SetConnectionPort(int port){
-		targetPort = port;
+		NetworkMgr.networkPort = port;
 	}
 
 	void TryHost(){
 		NetworkManager.singleton.StartHost();
 	}
 
-	void TryConnect(){
-		NetworkManager.singleton.networkAddress = targetAddress;
-		NetworkManager.singleton.networkPort = targetPort;
-		NetworkManager.singleton.StartClient();
-	}
+    public void Connect()
+    {
+        NetworkMgr.StartClient();
+    }
 
-	void HideAll(){
+    void HideAll(){
 		rootMenu.gameObject.SetActive(false);
 		joinMenu.gameObject.SetActive(false);
 		hostMenu.gameObject.SetActive(false);

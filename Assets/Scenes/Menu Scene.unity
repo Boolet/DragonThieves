@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -377,7 +377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -81.62056}
+  m_AnchoredPosition: {x: 400, y: -130.86227}
   m_SizeDelta: {x: 495.7, y: 85.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &92017461
@@ -898,6 +898,8 @@ MonoBehaviour:
   modeButtonText: {fileID: 1159620046}
   joinMenu: {fileID: 1755459214}
   hostMenu: {fileID: 57937535}
+  NetworkMgr: {fileID: 1422160383}
+  addressField: {fileID: 1763551837}
 --- !u!1 &932198860
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,7 +996,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -170.28554}
+  m_AnchoredPosition: {x: 400, y: -219.52725}
   m_SizeDelta: {x: 237, y: 56.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1126606791
@@ -1455,7 +1457,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 743933800}
-        m_MethodName: JoinButton
+        m_MethodName: JoinMenuButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1583,29 +1585,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1422160384}
   - component: {fileID: 1422160383}
-  - component: {fileID: 1422160382}
   m_Layer: 0
-  m_Name: Avi's Network Manager
+  m_Name: Network Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1422160382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1422160381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 0}
-  showGUI: 1
-  offsetX: 0
-  offsetY: 0
 --- !u!114 &1422160383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1779,7 +1765,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 743933800}
-        m_MethodName: HostButton
+        m_MethodName: HostMenuButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1858,7 +1844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -173.50056}
+  m_AnchoredPosition: {x: 400, y: -222.74228}
   m_SizeDelta: {x: 237, y: 56.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1645871136
@@ -1981,7 +1967,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 400, y: -92.23554}
+  m_AnchoredPosition: {x: 400, y: -141.47725}
   m_SizeDelta: {x: 584.7, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1707291340
@@ -2426,7 +2412,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 743933800}
+        m_MethodName: SetConnectionAddress
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.InputField+OnChangeEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
@@ -2789,7 +2786,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 743933800}
-        m_MethodName: HostButton
+        m_MethodName: Connect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

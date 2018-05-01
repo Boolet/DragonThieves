@@ -6,12 +6,6 @@ using UnityEngine.Networking;
 //goes on player parent
 public class DominoSpawner : NetworkBehaviour {
 
-	static HashSet<Vector3> playerPlacementDirections = new HashSet<Vector3>{
-		Vector3.down, Vector3.left, Vector3.back
-	};
-	public static bool fixedGravityMode = false;
-	public static bool allowSpawn = true;
-
 	[SerializeField] Camera cameraObject;
 	[SerializeField] DominoGravity dominoPrefab;
 	[SerializeField] GameObject ghostInstance;
@@ -23,6 +17,8 @@ public class DominoSpawner : NetworkBehaviour {
 	[SerializeField] LayerMask dominoTargets;
 	[SerializeField] float rotationSensitivity = 2f;
 	[SerializeField] float placeDistance = 10f;
+
+	SingletonSupport supporter;
 
 	float currentRotationAngle = 0f;
 	OverlapDetector detector;
@@ -38,7 +34,8 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void Start(){
-		if(!fixedGravityMode)
+		supporter = FindObjectOfType<SingletonSupport>();
+		if(!supporter.fixedGravityMode)
 			TakeAvailablePlacement();
 		ghostInstance.transform.SetParent(null);
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
@@ -50,9 +47,9 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void TakeAvailablePlacement(){
-		foreach (Vector3 v in playerPlacementDirections){
+		foreach (Vector3 v in supporter.playerPlacementDirections){
 			gravityDirection = v;
-			playerPlacementDirections.Remove(v);
+			supporter.playerPlacementDirections.Remove(v);
 			return;
 		}
 		throw new KeyNotFoundException("No elements in placement direction set to pick!");
@@ -63,7 +60,7 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void RelinquishPlacement(){
-		playerPlacementDirections.Add(gravityDirection);
+		supporter.playerPlacementDirections.Add(gravityDirection);
 	}
 
 	void Update () {
@@ -75,7 +72,7 @@ public class DominoSpawner : NetworkBehaviour {
 		CheckOverlap();
 		SetGhostColor();
 		print(currentMode);
-		if (Input.GetMouseButtonUp(0) && allowSpawn){
+		if (Input.GetMouseButtonUp(0) && supporter.allowSpawn){
 			DoDomino();
 		}
 	}
@@ -109,8 +106,9 @@ public class DominoSpawner : NetworkBehaviour {
 				}
 			} else if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0){
 				//hit a domino
-				if (hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == gravityDirection.normalized
-					|| hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == -gravityDirection.normalized){
+				Vector3 targetGravity = hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity;
+				float angleOffset = Vector3.Angle(targetGravity, gravityDirection.normalized);
+				if (angleOffset <= surfaceTolerance || angleOffset >= 180 - surfaceTolerance){
 					deleteTarget = hit.collider.gameObject;
 					behavior = DominoSpawnBehavior.Delete;
 				}

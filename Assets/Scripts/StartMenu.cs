@@ -23,11 +23,12 @@ public class StartMenu : MonoBehaviour {
 
 	public void ModeButton(){
 		//toggles the additional gravity directions
-		DominoSpawner.fixedGravityMode = !DominoSpawner.fixedGravityMode;
-
+		//DominoSpawner.fixedGravityMode = !DominoSpawner.fixedGravityMode;
+		/*
 		modeButtonText.text = "Mode:Sandbox";
 		if (DominoSpawner.fixedGravityMode == false)
 			modeButtonText.text = "Mode:Gravity";
+			*/
 	}
 
 	public void JoinMenuButton(){

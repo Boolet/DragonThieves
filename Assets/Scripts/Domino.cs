@@ -6,14 +6,17 @@ public class Domino : MonoBehaviour, Resetable {
 
 	[SerializeField] Transform positionOffset;
 
+	DominoTracker tracker;
+
 	Rigidbody dominoBody;
 	Quaternion spawnRotation;
 	Vector3 spawnPoint;
 
 	void Start(){
+		tracker = FindObjectOfType<DominoTracker>();
 		if(positionOffset != null)
 			MoveToOffset();
-		DominoTracker.RegisterDomino(this);
+		tracker.RegisterDomino(this);
 		spawnPoint = transform.position;
 		spawnRotation = transform.rotation;
 		dominoBody = GetComponent<Rigidbody>();
@@ -24,7 +27,7 @@ public class Domino : MonoBehaviour, Resetable {
 	}
 
 	void OnDestroy(){
-		DominoTracker.UnregisterDomino(this);
+		tracker.UnregisterDomino(this);
 	}
 
 	public void Reset(){

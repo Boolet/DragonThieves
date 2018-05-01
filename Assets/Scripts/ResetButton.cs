@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class ResetButton : MonoBehaviour {
 
+	DominoTracker tracker;
+
+	void Start(){
+		tracker = FindObjectOfType<DominoTracker>();
+	}
+
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.R)){
 			Reset();
@@ -11,6 +17,6 @@ public class ResetButton : MonoBehaviour {
 	}
 
 	public void Reset(){
-		DominoTracker.Reset();
+		tracker.Reset();
 	}
 }

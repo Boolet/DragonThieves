@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DominoTracker{
+public class DominoTracker : MonoBehaviour{
 
-	static List<Resetable> dominoes = new List<Resetable>();
+	List<Resetable> dominoes = new List<Resetable>();
 
-	public static void RegisterDomino(Resetable domino){
+	public void RegisterDomino(Resetable domino){
 		dominoes.Add(domino);
 	}
 
-	public static void UnregisterDomino(Resetable domino){
+	public void UnregisterDomino(Resetable domino){
 		dominoes.Remove(domino);
 	}
 
-	public static void Reset(){
+	public void Reset(){
 		foreach (Resetable dom in dominoes){
 			dom.Reset();
 		}

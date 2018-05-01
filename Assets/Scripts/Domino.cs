@@ -27,12 +27,10 @@ public class Domino : NetworkBehaviour, Resetable {
 		transform.position = positionOffset.position;
 	}
 
-	[Command]
 	void CmdSubscribe(){
 		FindObjectOfType<DominoTracker>().Subscribe(this);
 	}
 
-	[Command]
 	public void CmdReset(){
 		dominoBody.velocity = Vector3.zero;
 		dominoBody.angularVelocity = Vector3.zero;

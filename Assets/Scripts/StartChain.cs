@@ -37,13 +37,12 @@ public class StartChain : NetworkBehaviour, Resetable {
     {
 		rb.AddRelativeForce(x, y, z);
     }
-
-	[Command]
+		
 	void CmdSubscribe(){
+		print("Start domino subscribing");
 		FindObjectOfType<DominoTracker>().Subscribe(this);
 	}
-
-	[Command]
+		
     public void CmdReset()
     {
         canReset = false;

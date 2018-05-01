@@ -13,6 +13,10 @@ public class Domino : NetworkBehaviour, Resetable {
 	Quaternion spawnRotation;
 	Vector3 spawnPoint;
 
+	//player calls reset - call reset on every player
+
+	//on player join, existing dominoes need to subscribe for that player
+
 	void Awake(){
 		tracker = FindObjectOfType<DominoTracker>();
 		if(positionOffset != null)
@@ -23,12 +27,20 @@ public class Domino : NetworkBehaviour, Resetable {
 		CmdSubscribe();
 	}
 
+	void OnStartClient(){
+		CmdSubscribe();
+	}
+
 	void MoveToOffset(){
 		transform.position = positionOffset.position;
 	}
 
 	void CmdSubscribe(){
 		FindObjectOfType<DominoTracker>().Subscribe(this);
+	}
+
+	void OnDestroy(){
+		FindObjectOfType<DominoTracker>().Unsubscribe(this);
 	}
 
 	public void CmdReset(){

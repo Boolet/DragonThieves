@@ -37,6 +37,10 @@ public class StartChain : NetworkBehaviour, Resetable {
     {
 		rb.AddRelativeForce(x, y, z);
     }
+
+	void OnStartClient(){
+		CmdSubscribe();
+	}
 		
 	void CmdSubscribe(){
 		print("Start domino subscribing");

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 223723646850164272}
   - component: {fileID: 114676718726916702}
   - component: {fileID: 114511611180807236}
+  - component: {fileID: 114448286065952718}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Canvas
@@ -41,6 +42,7 @@ GameObject:
   - component: {fileID: 114870924934659604}
   - component: {fileID: 114003562960020146}
   - component: {fileID: 114822806807689740}
+  - component: {fileID: 114285925379596802}
   m_Layer: 5
   m_Name: Reset Button
   m_TagString: Untagged
@@ -151,6 +153,38 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114285925379596802
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056252478164620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 225
+    i1: 151
+    i2: 192
+    i3: 81
+    i4: 142
+    i5: 36
+    i6: 11
+    i7: 68
+    i8: 218
+    i9: 5
+    i10: 59
+    i11: 202
+    i12: 221
+    i13: 2
+    i14: 222
+    i15: 145
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114424207408967134
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -178,6 +212,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114448286065952718
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1049045138974214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 225
+    i1: 151
+    i2: 192
+    i3: 81
+    i4: 142
+    i5: 36
+    i6: 11
+    i7: 68
+    i8: 218
+    i9: 5
+    i10: 59
+    i11: 202
+    i12: 221
+    i13: 2
+    i14: 222
+    i15: 145
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114511611180807236
 MonoBehaviour:
   m_ObjectHideFlags: 1

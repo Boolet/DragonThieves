@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class DominoTracker : MonoBehaviour{
+public class DominoTracker : NetworkBehaviour{
 
+	[SyncVar]
 	List<Resetable> dominoes = new List<Resetable>();
 
 	public void RegisterDomino(Resetable domino){

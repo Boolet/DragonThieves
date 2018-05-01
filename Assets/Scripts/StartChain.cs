@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class StartChain : MonoBehaviour, Resetable {
+public class StartChain : NetworkBehaviour, Resetable {
 
     public GameObject startDomino;
     public float _x = 100;
     public float _y = 0;
     public float _z = 0;
     public Rigidbody rb;
+	[SyncVar]
     public bool canReset = false;
 
 	void Start ()

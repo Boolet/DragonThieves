@@ -16,6 +16,7 @@ public class StartChain : NetworkBehaviour, Resetable {
 	void Start ()
     {
         rb = GetComponent<Rigidbody>();
+		FindObjectOfType<DominoTracker>().RegisterDomino(this);
 	}
 	
 	// Update is called once per frame

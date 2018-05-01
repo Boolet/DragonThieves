@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class DominoTracker : NetworkBehaviour{
 
-	List<Resetable> resetables = new List<Resetable>();
+	public List<Resetable> resetables = new List<Resetable>();
 
 	public void Subscribe(Resetable r){
 		resetables.Add(r);

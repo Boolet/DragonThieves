@@ -38,16 +38,19 @@ public class StartChain : NetworkBehaviour, Resetable {
 		rb.AddRelativeForce(x, y, z);
     }
 
-	void OnStartClient(){
-		CmdSubscribe();
-	}
+
 		
 	void CmdSubscribe(){
 		print("Start domino subscribing");
 		FindObjectOfType<DominoTracker>().Subscribe(this);
 	}
+
+	public void CmdReset(){
+		RpcReset();
+	}
 		
-    public void CmdReset()
+	[ClientRpc]
+    public void RpcReset()
     {
         canReset = false;
     }

@@ -44,6 +44,11 @@ public class Domino : NetworkBehaviour, Resetable {
 	}
 
 	public void CmdReset(){
+		RpcReset();
+	}
+
+	[ClientRpc]
+	public void RpcReset(){
 		dominoBody.velocity = Vector3.zero;
 		dominoBody.angularVelocity = Vector3.zero;
 		transform.position = spawnPoint;

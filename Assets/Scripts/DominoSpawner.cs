@@ -33,7 +33,7 @@ public class DominoSpawner : NetworkBehaviour {
 		None, Spawn, Delete, Hover
 	}
 
-	void Start(){
+	void Awake(){
 		supporter = FindObjectOfType<SingletonSupport>();
 		if(!supporter.fixedGravityMode)
 			TakeAvailablePlacement();
@@ -71,7 +71,6 @@ public class DominoSpawner : NetworkBehaviour {
 		PlaceGhost();
 		CheckOverlap();
 		SetGhostColor();
-		print(currentMode);
 		if (Input.GetMouseButtonUp(0) && supporter.allowSpawn){
 			DoDomino();
 		}
@@ -112,7 +111,6 @@ public class DominoSpawner : NetworkBehaviour {
 					deleteTarget = hit.collider.gameObject;
 					behavior = DominoSpawnBehavior.Delete;
 				}
-				print("I hit a domino! Can I delete it? " + (deleteTarget == hit.collider.gameObject));
 			}
 			return true;
 		} else{

@@ -12,7 +12,7 @@ public class Domino : MonoBehaviour, Resetable {
 	Quaternion spawnRotation;
 	Vector3 spawnPoint;
 
-	void Start(){
+	void Awake(){
 		tracker = FindObjectOfType<DominoTracker>();
 		if(positionOffset != null)
 			MoveToOffset();

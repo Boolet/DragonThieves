@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Domino : MonoBehaviour, Resetable {
+public class Domino : NetworkBehaviour, Resetable {
 
 	[SerializeField] Transform positionOffset;
 

@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class DominoTracker{
 
-	static List<Domino> dominoes = new List<Domino>();
+	static List<Resetable> dominoes = new List<Resetable>();
 
-	public static void RegisterDomino(Domino domino){
+	public static void RegisterDomino(Resetable domino){
 		dominoes.Add(domino);
 	}
 
-	public static void UnregisterDomino(Domino domino){
+	public static void UnregisterDomino(Resetable domino){
 		dominoes.Remove(domino);
 	}
 
 	public static void Reset(){
-		foreach (Domino dom in dominoes){
+		foreach (Resetable dom in dominoes){
 			dom.Reset();
 		}
 	}

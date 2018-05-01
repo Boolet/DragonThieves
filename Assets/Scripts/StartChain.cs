@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StartChain : MonoBehaviour {
+public class StartChain : MonoBehaviour, Resetable {
 
     public GameObject startDomino;
     public float _x = 100;

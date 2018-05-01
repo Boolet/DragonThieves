@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Domino : MonoBehaviour {
+public class Domino : MonoBehaviour, Resetable {
 
 	[SerializeField] Transform positionOffset;
 

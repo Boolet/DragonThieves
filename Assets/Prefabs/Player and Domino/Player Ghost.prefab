@@ -355,6 +355,9 @@ MonoBehaviour:
   badGhostMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
   gravityDirection: {x: -1, y: 0, z: 0}
   surfaceTolerance: 2
+  raycastTargets:
+    serializedVersion: 2
+    m_Bits: 768
   spawnTargets:
     serializedVersion: 2
     m_Bits: 256

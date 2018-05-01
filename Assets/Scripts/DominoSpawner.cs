@@ -10,6 +10,7 @@ public class DominoSpawner : NetworkBehaviour {
 		Vector3.down, Vector3.left, Vector3.back
 	};
 	public static bool fixedGravityMode = false;
+	public static bool allowSpawn = true;
 
 	[SerializeField] Camera cameraObject;
 	[SerializeField] DominoGravity dominoPrefab;
@@ -17,6 +18,7 @@ public class DominoSpawner : NetworkBehaviour {
 	[SerializeField] Material badGhostMaterial;
 	[SerializeField] Vector3 gravityDirection = Vector3.down;
 	[SerializeField] float surfaceTolerance = 2f;
+	[SerializeField] LayerMask raycastTargets;
 	[SerializeField] LayerMask spawnTargets;
 	[SerializeField] LayerMask dominoTargets;
 	[SerializeField] float rotationSensitivity = 2f;
@@ -29,6 +31,7 @@ public class DominoSpawner : NetworkBehaviour {
 	Vector3 targetPoint;
 	Vector3 targetNormal;
 	DominoSpawnBehavior currentMode = DominoSpawnBehavior.Hover;
+	GameObject deleteTarget = null;
 
 	enum DominoSpawnBehavior{
 		None, Spawn, Delete, Hover
@@ -41,6 +44,9 @@ public class DominoSpawner : NetworkBehaviour {
 		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
 		goodGhostMaterial = ghostMesh.material;
 		detector = ghostInstance.GetComponent<OverlapDetector>();
+
+		//rotate the player object - hopefully it works without issue
+		transform.up = -gravityDirection;
 	}
 
 	void TakeAvailablePlacement(){
@@ -68,9 +74,22 @@ public class DominoSpawner : NetworkBehaviour {
 		PlaceGhost();
 		CheckOverlap();
 		SetGhostColor();
-		if (Input.GetMouseButtonUp(0)){
-			TrySpawnDomino();
+		print(currentMode);
+		if (Input.GetMouseButtonUp(0) && allowSpawn){
+			DoDomino();
 		}
+	}
+
+	void DoDomino(){
+		switch (currentMode){
+			case DominoSpawnBehavior.Spawn:
+				TrySpawnDomino();
+				break;
+			case DominoSpawnBehavior.Delete:
+				TryDeleteDomino();
+				break;
+		}
+		
 	}
 
 	void RotateDomino(){
@@ -81,7 +100,7 @@ public class DominoSpawner : NetworkBehaviour {
 
 	bool AdaptiveRaycast(out RaycastHit hit, out DominoSpawnBehavior behavior){
 		behavior = DominoSpawnBehavior.None;
-		if (Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, placeDistance)){
+		if (Physics.Raycast(cameraObject.transform.position, cameraObject.transform.forward, out hit, placeDistance, raycastTargets)){
 			if (((1 << hit.collider.gameObject.layer) & spawnTargets.value) != 0){
 				//hit a spawnable area
 				if (Vector3.Angle(gravityDirection * -1, hit.normal) <= surfaceTolerance
@@ -92,8 +111,10 @@ public class DominoSpawner : NetworkBehaviour {
 				//hit a domino
 				if (hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == gravityDirection.normalized
 					|| hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity == -gravityDirection.normalized){
+					deleteTarget = hit.collider.gameObject;
 					behavior = DominoSpawnBehavior.Delete;
 				}
+				print("I hit a domino! Can I delete it? " + (deleteTarget == hit.collider.gameObject));
 			}
 			return true;
 		} else{
@@ -118,7 +139,8 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	Quaternion DominoRotation(bool reversed){
-		return Quaternion.FromToRotation(Vector3.up, -gravityDirection * (reversed?1:-1)) * Quaternion.AngleAxis(currentRotationAngle, Vector3.up);
+		return Quaternion.FromToRotation(Vector3.up, -gravityDirection * (reversed?1:-1))
+			* Quaternion.AngleAxis(currentRotationAngle * (reversed?1:-1), Vector3.up);
 	}
 
 	void SetTransformToDominoPlacement(Transform t, bool reversed){
@@ -135,15 +157,19 @@ public class DominoSpawner : NetworkBehaviour {
 	}
 
 	void CheckOverlap(){
-		if (detector.IsOverlapping()){
+		if (detector.IsOverlapping() && currentMode == DominoSpawnBehavior.Spawn){
 			currentMode = DominoSpawnBehavior.None;
 		}
 	}
 
-	void TrySpawnDomino(){
-		if (currentMode == DominoSpawnBehavior.Spawn){
-			CmdSpawnDomino(targetPoint, targetNormal, gravityDirection);
+	void TryDeleteDomino(){
+		if (deleteTarget != null){
+			CmdDestroyDomino(deleteTarget);
 		}
+	}
+
+	void TrySpawnDomino(){
+		CmdSpawnDomino(targetPoint, targetNormal, gravityDirection);
 	}
 
 	[Command]
@@ -152,5 +178,10 @@ public class DominoSpawner : NetworkBehaviour {
 		DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
 		grav.Gravity = gravity * (reversed?1:-1);
 		NetworkServer.Spawn(grav.gameObject);
+	}
+
+	[Command]
+	void CmdDestroyDomino(GameObject toDelete){
+		NetworkServer.Destroy(toDelete);
 	}
 }

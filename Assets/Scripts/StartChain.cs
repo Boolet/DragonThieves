@@ -15,13 +15,13 @@ public class StartChain : NetworkBehaviour, Resetable {
 	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
-		CmdSubscribe();
+		RpcSubscribe();
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if(canReset == false && Input.GetButtonDown("Start") && isLocalPlayer)
+		if(canReset == false && Input.GetButtonDown("Start"))
         {
             //Debug.Log("Adding force");
             canReset = true;
@@ -39,8 +39,9 @@ public class StartChain : NetworkBehaviour, Resetable {
     {
 		rb.AddRelativeForce(x, y, z);
     }
-		
-	void CmdSubscribe(){
+
+	[ClientRpc]
+	void RpcSubscribe(){
 		print("Start domino subscribing");
 		FindObjectOfType<DominoTracker>().Subscribe(this);
 	}

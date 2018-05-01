@@ -160,24 +160,24 @@ public class DominoSpawner : NetworkBehaviour {
 
 	void TryDeleteDomino(){
 		if (deleteTarget != null){
-			RpcDestroyDomino(deleteTarget);
+			CmdDestroyDomino(deleteTarget);
 		}
 	}
 
 	void TrySpawnDomino(){
-		RpcSpawnDomino(targetPoint, targetNormal, gravityDirection);
+		CmdSpawnDomino(targetPoint, targetNormal, gravityDirection);
 	}
 
-	[ClientRpc]
-	void RpcSpawnDomino(Vector3 point, Vector3 normal, Vector3 gravity){
+	[Command]
+	void CmdSpawnDomino(Vector3 point, Vector3 normal, Vector3 gravity){
 		bool reversed = Vector3.Angle(normal, gravity) > 90f;
 		DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
 		grav.Gravity = gravity * (reversed?1:-1);
 		NetworkServer.Spawn(grav.gameObject);
 	}
 
-	[ClientRpc]
-	void RpcDestroyDomino(GameObject toDelete){
+	[Command]
+	void CmdDestroyDomino(GameObject toDelete){
 		NetworkServer.Destroy(toDelete);
 	}
 }

@@ -13,7 +13,7 @@ public class StartChain : NetworkBehaviour, Resetable {
 	[SyncVar]
     public bool canReset = false;
 
-	void Start ()
+	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
 		FindObjectOfType<DominoTracker>().RegisterDomino(this);

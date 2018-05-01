@@ -34,13 +34,18 @@ public class StartChain : NetworkBehaviour, Resetable {
         }*/
 	}
 
-	[ClientRpc]
+	public void PlayerKnock(){
+		if (canReset == false){
+			canReset = true;
+			RpcKnockDomino(_x, _y, _z);
+		}
+	}
+
     void RpcKnockDomino(float x, float y, float z)
     {
 		rb.AddRelativeForce(x, y, z);
     }
 
-	[ClientRpc]
 	void RpcSubscribe(){
 		print("Start domino subscribing");
 		FindObjectOfType<DominoTracker>().Subscribe(this);

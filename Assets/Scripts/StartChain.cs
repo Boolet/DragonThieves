@@ -20,12 +20,12 @@ public class StartChain : NetworkBehaviour, Resetable {
 	
 	// Update is called once per frame
 	void Update ()
-    {
-		if(canReset == false && Input.GetButtonDown("Start"))
+	{
+		if(canReset == false && Input.GetButtonDown("Start") && isLocalPlayer)
         {
             //Debug.Log("Adding force");
             canReset = true;
-            KnockDomino(_x, _y, _z);
+            RpcKnockDomino(_x, _y, _z);
 
         }
         /*if(canReset && Input.GetKeyDown("Start"))
@@ -33,12 +33,12 @@ public class StartChain : NetworkBehaviour, Resetable {
             canReset = false;
         }*/
 	}
-    void KnockDomino(float x, float y, float z)
+
+	[ClientRpc]
+    void RpcKnockDomino(float x, float y, float z)
     {
 		rb.AddRelativeForce(x, y, z);
     }
-
-
 		
 	void CmdSubscribe(){
 		print("Start domino subscribing");

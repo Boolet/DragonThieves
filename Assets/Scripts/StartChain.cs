@@ -10,7 +10,6 @@ public class StartChain : NetworkBehaviour, Resetable {
     public float _y = 0;
     public float _z = 0;
     public Rigidbody rb;
-	[SyncVar]
     public bool canReset = false;
 
 	void Awake ()

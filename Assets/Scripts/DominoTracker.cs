@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class DominoTracker : NetworkBehaviour{
 
-	[SyncVar]
 	List<Resetable> dominoes = new List<Resetable>();
 
 	public void RegisterDomino(Resetable domino){

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ResetButton : MonoBehaviour {
+public class ResetButton : NetworkBehaviour {
 
 	DominoTracker tracker;
 
@@ -12,11 +13,12 @@ public class ResetButton : MonoBehaviour {
 
 	void Update(){
 		if(Input.GetKeyDown(KeyCode.R)){
-			Reset();
+			CmdReset();
 		}
 	}
 
-	public void Reset(){
-		tracker.Reset();
+	[Command]
+	public void CmdReset(){
+		tracker.CmdReset();
 	}
 }

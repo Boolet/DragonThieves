@@ -17,21 +17,23 @@ public class Domino : NetworkBehaviour, Resetable {
 		tracker = FindObjectOfType<DominoTracker>();
 		if(positionOffset != null)
 			MoveToOffset();
-		tracker.RegisterDomino(this);
 		spawnPoint = transform.position;
 		spawnRotation = transform.rotation;
 		dominoBody = GetComponent<Rigidbody>();
+		CmdSubscribe();
 	}
 
 	void MoveToOffset(){
 		transform.position = positionOffset.position;
 	}
 
-	void OnDestroy(){
-		tracker.UnregisterDomino(this);
+	[Command]
+	void CmdSubscribe(){
+		FindObjectOfType<DominoTracker>().Subscribe(this);
 	}
 
-	public void Reset(){
+	[Command]
+	public void CmdReset(){
 		dominoBody.velocity = Vector3.zero;
 		dominoBody.angularVelocity = Vector3.zero;
 		transform.position = spawnPoint;

@@ -15,7 +15,7 @@ public class StartChain : NetworkBehaviour, Resetable {
 	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
-		FindObjectOfType<DominoTracker>().RegisterDomino(this);
+		CmdSubscribe();
 	}
 	
 	// Update is called once per frame
@@ -38,7 +38,13 @@ public class StartChain : NetworkBehaviour, Resetable {
 		rb.AddRelativeForce(x, y, z);
     }
 
-    public void Reset()
+	[Command]
+	void CmdSubscribe(){
+		FindObjectOfType<DominoTracker>().Subscribe(this);
+	}
+
+	[Command]
+    public void CmdReset()
     {
         canReset = false;
     }

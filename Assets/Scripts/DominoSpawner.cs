@@ -170,10 +170,8 @@ public class DominoSpawner : NetworkBehaviour {
 
 	[Command]
 	void CmdSpawnDomino(Vector3 point, Vector3 normal, Vector3 gravity){
-		//this is only applying the correct gravity on the server
 		bool reversed = Vector3.Angle(normal, gravity) > 90f;
 		DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
-		//grav.Gravity = gravity * (reversed?1:-1);
 		NetworkServer.Spawn(grav.gameObject);
 		grav.ServerSetGravity(gravity * (reversed?1:-1));
 		grav.RpcSetGravity(gravity * (reversed?1:-1));

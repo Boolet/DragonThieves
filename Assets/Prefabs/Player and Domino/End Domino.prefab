@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravityOrientation: {x: 0, y: -1, z: 0}
+  canDelete: 0
 --- !u!114 &114195577626311396
 MonoBehaviour:
   m_ObjectHideFlags: 1

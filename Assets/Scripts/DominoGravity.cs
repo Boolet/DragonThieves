@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class DominoGravity : MonoBehaviour {
+public class DominoGravity : NetworkBehaviour {
 
+	[SyncVar]
 	[SerializeField] Vector3 gravityOrientation = Vector3.zero;
 
 	Rigidbody body;
@@ -18,6 +20,16 @@ public class DominoGravity : MonoBehaviour {
 		if (gravityOrientation == Vector3.zero)
 			return;
 		body.AddForce(gravityOrientation.normalized * Physics.gravity.magnitude, ForceMode.Acceleration);
+	}
+
+	[Server]
+	public void ServerSetGravity(Vector3 gravity){
+		gravityOrientation = gravity.normalized;
+	}
+
+	[ClientRpc]
+	public void RpcSetGravity(Vector3 gravity){
+		gravityOrientation = gravity.normalized;
 	}
 
 	public Vector3 Gravity{

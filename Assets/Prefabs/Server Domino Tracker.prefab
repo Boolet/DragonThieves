@@ -9,44 +9,55 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1805797546989748}
+  m_RootGameObject: {fileID: 1938134121240860}
   m_IsPrefabParent: 1
---- !u!1 &1805797546989748
+--- !u!1 &1938134121240860
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4796520196875582}
-  - component: {fileID: 114570799538238640}
-  - component: {fileID: 114021164682927856}
+  - component: {fileID: 4909295894517260}
+  - component: {fileID: 114595509060799936}
+  - component: {fileID: 114700239272482452}
   m_Layer: 0
-  m_Name: Synced Singleton
+  m_Name: Server Domino Tracker
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4796520196875582
+--- !u!4 &4909295894517260
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1805797546989748}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 3, z: 5}
+  m_GameObject: {fileID: 1938134121240860}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.17395973, y: 3.5, z: -1.6550808}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114021164682927856
+--- !u!114 &114595509060799936
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1805797546989748}
+  m_GameObject: {fileID: 1938134121240860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7a5c42f9a514562be6ed95cbc7f9e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114700239272482452
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1938134121240860}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
@@ -55,34 +66,21 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 64
-    i1: 207
-    i2: 217
-    i3: 210
-    i4: 215
-    i5: 99
+    i0: 139
+    i1: 84
+    i2: 150
+    i3: 137
+    i4: 119
+    i5: 231
     i6: 20
-    i7: 238
-    i8: 11
-    i9: 223
-    i10: 215
-    i11: 58
-    i12: 28
-    i13: 128
-    i14: 17
-    i15: 102
+    i7: 110
+    i8: 216
+    i9: 230
+    i10: 22
+    i11: 211
+    i12: 105
+    i13: 78
+    i14: 91
+    i15: 249
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!114 &114570799538238640
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1805797546989748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdfa4a3d7afd046a6999a088d7bbcd03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fixedGravityMode: 0
-  allowSpawn: 1

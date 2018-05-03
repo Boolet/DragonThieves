@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class StartChain : NetworkBehaviour, Resetable {
+public class StartChain : NetworkBehaviour {
 
     public GameObject startDomino;
     public float _x = 100;
@@ -15,26 +15,10 @@ public class StartChain : NetworkBehaviour, Resetable {
 	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
-		RpcSubscribe();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		if(canReset == false && Input.GetButtonDown("Start"))
-        {
-            //Debug.Log("Adding force");
-            canReset = true;
-            RpcKnockDomino(_x, _y, _z);
-
-        }
-        /*if(canReset && Input.GetKeyDown("Start"))
-        {
-            canReset = false;
-        }*/
 	}
 
-	public void PlayerKnock(){
+	[ClientRpc]
+	public void RpcPlayerKnock(){
 		if (canReset == false){
 			canReset = true;
 			RpcKnockDomino(_x, _y, _z);
@@ -46,11 +30,7 @@ public class StartChain : NetworkBehaviour, Resetable {
 		rb.AddRelativeForce(x, y, z);
     }
 
-	void RpcSubscribe(){
-		print("Start domino subscribing");
-		FindObjectOfType<DominoTracker>().Subscribe(this);
-	}
-
+	[Server]
 	public void CmdReset(){
 		RpcReset();
 	}

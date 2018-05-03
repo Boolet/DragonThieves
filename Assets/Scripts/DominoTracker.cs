@@ -5,20 +5,18 @@ using UnityEngine.Networking;
 
 public class DominoTracker : NetworkBehaviour{
 
-	public List<Resetable> resetables = new List<Resetable>();
-
-	public void Subscribe(Resetable r){
-		resetables.Add(r);
-	}
-		
-	public void Unsubscribe(Resetable r){
-		resetables.Remove(r);
-	}
-
-	[Command]
+	[Server]
 	public void CmdReset(){
-		foreach (Resetable r in resetables){
-			r.CmdReset();
+		foreach (Domino d in FindObjectsOfType<Domino>()){
+			d.CmdReset();
 		}
+		foreach (StartChain sc in FindObjectsOfType<StartChain>()){
+			sc.CmdReset();
+		}
+	}
+
+	[ClientRpc]
+	public void RpcDebugOut(){
+		print("Debugging");
 	}
 }

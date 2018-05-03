@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Domino : NetworkBehaviour, Resetable {
-
-	[SerializeField] Transform positionOffset;
-
-	DominoTracker tracker;
-
+public class Domino : NetworkBehaviour{
 	Rigidbody dominoBody;
 	Quaternion spawnRotation;
 	Vector3 spawnPoint;
@@ -18,37 +13,24 @@ public class Domino : NetworkBehaviour, Resetable {
 	//on player join, existing dominoes need to subscribe for that player
 
 	void Awake(){
-		tracker = FindObjectOfType<DominoTracker>();
-		if(positionOffset != null)
-			MoveToOffset();
 		spawnPoint = transform.position;
 		spawnRotation = transform.rotation;
 		dominoBody = GetComponent<Rigidbody>();
-		CmdSubscribe();
 	}
 
-	void OnStartClient(){
-		CmdSubscribe();
-	}
-
-	void MoveToOffset(){
-		transform.position = positionOffset.position;
-	}
-
-	void CmdSubscribe(){
-		FindObjectOfType<DominoTracker>().Subscribe(this);
-	}
-
-	void OnDestroy(){
-		FindObjectOfType<DominoTracker>().Unsubscribe(this);
-	}
-
+	[Server]
 	public void CmdReset(){
+		//print("CmdReset on domino");
 		RpcReset();
+		dominoBody.velocity = Vector3.zero;
+		dominoBody.angularVelocity = Vector3.zero;
+		transform.position = spawnPoint;
+		transform.rotation = spawnRotation;
 	}
 
 	[ClientRpc]
 	public void RpcReset(){
+		//print("RPC Reset");
 		dominoBody.velocity = Vector3.zero;
 		dominoBody.angularVelocity = Vector3.zero;
 		transform.position = spawnPoint;

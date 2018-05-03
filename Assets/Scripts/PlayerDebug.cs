@@ -12,8 +12,6 @@ public class PlayerDebug : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.G)){
-			print(FindObjectOfType<DominoTracker>().resetables.Count);
-		}
+		
 	}
 }

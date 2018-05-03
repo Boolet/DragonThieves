@@ -7,6 +7,7 @@ public class DominoGravity : NetworkBehaviour {
 
 	[SyncVar]
 	[SerializeField] Vector3 gravityOrientation = Vector3.zero;
+	[SerializeField] bool canDelete = true;
 
 	Rigidbody body;
 
@@ -30,6 +31,10 @@ public class DominoGravity : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcSetGravity(Vector3 gravity){
 		gravityOrientation = gravity.normalized;
+	}
+		
+	public bool CanBeDeleted(){
+		return canDelete;
 	}
 
 	public Vector3 Gravity{

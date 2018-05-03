@@ -105,7 +105,12 @@ public class DominoSpawner : NetworkBehaviour {
 				}
 			} else if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0){
 				//hit a domino
-				Vector3 targetGravity = hit.collider.gameObject.GetComponentInParent<DominoGravity>().Gravity;
+				DominoGravity targetGravScript = hit.collider.gameObject.GetComponentInParent<DominoGravity>();
+				if(!targetGravScript.CanBeDeleted()){
+					behavior = DominoSpawnBehavior.None;
+					return true;
+				}
+				Vector3 targetGravity = targetGravScript.Gravity;
 				float angleOffset = Vector3.Angle(targetGravity, gravityDirection.normalized);
 				if (angleOffset <= surfaceTolerance || angleOffset >= 180 - surfaceTolerance){
 					deleteTarget = hit.collider.gameObject;

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// TO DO:
+/// +Change block target color when in delete mode
+/// +Allow the user to scale the block to be placed using some interface
+/// 
 /// The player's controls for placing and deleting blocks within the editor mode. The blocks are considered
 /// to be of higher priority than other objects such as dominos and any toys that may be included in the game,
 /// so placing a block over such objects will delete them.
@@ -17,6 +21,7 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class BlockPlacement : MonoBehaviour {
 
+	//necessary referenes
 	[SerializeField] EnvironmentBlock blockPrefab;
 	[SerializeField] GameObject placementIndicator;	//can just be a cube
 	[SerializeField] Material canPlaceMaterial;
@@ -25,9 +30,10 @@ public class BlockPlacement : MonoBehaviour {
 	[SerializeField] KeyCode modeSwitchKey = KeyCode.E;
 	[SerializeField] float placementDistance = 10f;
 	[SerializeField] float deleteDistance = 10f;
-	[SerializeField] LayerMask castObstructions;
-	[SerializeField] LayerMask placementObstructions;
-	[SerializeField] LayerMask dominoLayer;
+	[SerializeField] LayerMask castObstructions;	//objects that can block the player's interaction path
+	[SerializeField] LayerMask placementObstructions;	//objects that prevent block placement
+	[SerializeField] LayerMask toyLayer;	//the domino layer (but really all toy layers that should be deleted when a block is placed)
+
 	//maybe also have a reference to a HUD for this
 
 	enum BlockPlaceBehavior{
@@ -37,8 +43,6 @@ public class BlockPlacement : MonoBehaviour {
 	Vector3 boxDimensions = Vector3.one;
 	BlockPlaceBehavior behavior = BlockPlaceBehavior.Place;
 	EnvironmentBlock currentDeleteTarget = null;
-
-
 
 
 	//=============================================================================================
@@ -55,7 +59,7 @@ public class BlockPlacement : MonoBehaviour {
 	}
 
 	void OnDisable(){
-
+		//need to switch the appearance of the delete-highlighted block back to normal
 	}
 
 
@@ -71,6 +75,7 @@ public class BlockPlacement : MonoBehaviour {
 			else
 				behavior = BlockPlaceBehavior.Place;
 		}
+		SetIndicatorMode(behavior);
 	}
 
 	//changes the player's indicator to reflect the mode; currently just turns off the placement
@@ -129,7 +134,7 @@ public class BlockPlacement : MonoBehaviour {
 
 	//destroys all dominos that overlap with the block's placement (this could be modified to destroy any toys that may be placed)
 	void DestroyOverlappingDominos(Vector3 placementPoint){
-		Collider[] overlappingDominos = BlockOverlapColliders(placementPoint, dominoLayer);
+		Collider[] overlappingDominos = BlockOverlapColliders(placementPoint, toyLayer);
 		foreach(Collider col in overlappingDominos){
 			Destroy(col.gameObject);
 		}
@@ -187,6 +192,7 @@ public class BlockPlacement : MonoBehaviour {
 			currentDeleteTarget = hit.collider.gameObject.GetComponent<EnvironmentBlock>();
 	}
 
+	//adjusts the current delete target and changes the look of the target to indicate which is being selected
 	void DeletionTargetControl(EnvironmentBlock newTarget){
 		if (currentDeleteTarget == newTarget)	//if it's the same target, don't worry about it
 			return;

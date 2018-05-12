@@ -37,10 +37,12 @@ public class DominoSpawner : NetworkBehaviour {
 		supporter = FindObjectOfType<SingletonSupport>();
 		if(!supporter.fixedGravityMode)
 			TakeAvailablePlacement();
-		ghostInstance.transform.SetParent(null);
-		ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
-		goodGhostMaterial = ghostMesh.material;
-		detector = ghostInstance.GetComponent<OverlapDetector>();
+		if (ghostInstance != null){
+			ghostInstance.transform.SetParent(null);
+			ghostMesh = ghostInstance.GetComponentInChildren<MeshRenderer>();
+			goodGhostMaterial = ghostMesh.material;
+			detector = ghostInstance.GetComponent<OverlapDetector>();
+		}
 
 		//rotate the player object - hopefully it works without issue
 		transform.up = -gravityDirection;

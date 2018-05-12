@@ -16,14 +16,13 @@ using UnityEngine;
 /// E to switch modes (serialized)
 /// 
 /// Usage:
-/// Attach to player's camera object
+/// Attach to player object; it or its child should have the camera attached
 /// </summary>
-[RequireComponent(typeof(Camera))]
 public class BlockPlacement : MonoBehaviour {
 
 	//necessary referenes
 	[SerializeField] EnvironmentBlock blockPrefab;
-	[SerializeField] GameObject placementIndicator;	//can just be a cube
+	[SerializeField] GameObject placementIndicator = null;	//can just be a cube
 	[SerializeField] Material canPlaceMaterial;
 	[SerializeField] Material noPlaceMaterial;
 
@@ -40,6 +39,8 @@ public class BlockPlacement : MonoBehaviour {
 		Place, Delete
 	}
 
+	MeshRenderer indicatorRenderer;
+	Camera playerCam;
 	Vector3 boxDimensions = Vector3.one;
 	BlockPlaceBehavior behavior = BlockPlaceBehavior.Place;
 	EnvironmentBlock currentDeleteTarget = null;
@@ -48,6 +49,22 @@ public class BlockPlacement : MonoBehaviour {
 	//=============================================================================================
 	// Code control
 	//=============================================================================================
+
+	void Start(){
+		playerCam = GetComponent<Camera>();
+		if (playerCam == null)
+			playerCam = GetComponentInChildren<Camera>();
+		if (playerCam == null)
+			throw new MissingComponentException("No camera object found on or under BlockPlacement script");
+
+		if (placementIndicator == null){
+			placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		}
+		placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
+		indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
+		if (indicatorRenderer == null)
+			throw new MissingComponentException("BlockPlacement indicator does not have a MeshRenderer component");
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -109,7 +126,9 @@ public class BlockPlacement : MonoBehaviour {
 
 	//changes the indicator's material based on whether a block can be placed here
 	void AdjustIndicatorColor(bool canPlace){
-
+		Material toSwitch = canPlace ? canPlaceMaterial : noPlaceMaterial;
+		if(indicatorRenderer.material != toSwitch)	//not sure if this saves any processing power
+			indicatorRenderer.material = toSwitch;
 	}
 
 	//returns the placement point for the block; if the raycast hits a target then it will be that point plus the relevant
@@ -153,10 +172,10 @@ public class BlockPlacement : MonoBehaviour {
 	//gives a placement point if there is no hit, otherwise gives a hit
 	bool PlacementPoint(out Vector3 rawPoint, out RaycastHit hit){
 		rawPoint = Vector3.zero;
-		if (Physics.Raycast(transform.position, transform.forward, out hit, placementDistance, castObstructions)){
+		if (Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out hit, placementDistance, castObstructions)){
 			return true;
 		} else{
-			rawPoint = transform.position + transform.forward * placementDistance;
+			rawPoint = playerCam.transform.position + playerCam.transform.forward * placementDistance;
 			return false;
 		}
 	}
@@ -186,7 +205,7 @@ public class BlockPlacement : MonoBehaviour {
 	//tries to find a target that could be deleted
 	void FindTargetBlock(){
 		RaycastHit hit;
-		if (!Physics.Raycast(transform.position, transform.forward, out hit, placementDistance, castObstructions))	//facing anything?
+		if (!Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out hit, placementDistance, castObstructions))	//facing anything?
 			currentDeleteTarget = null;
 		else
 			currentDeleteTarget = hit.collider.gameObject.GetComponent<EnvironmentBlock>();

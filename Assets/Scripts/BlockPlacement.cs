@@ -27,7 +27,10 @@ public class BlockPlacement : MonoBehaviour {
 	[SerializeField] Material noPlaceMaterial;
 
 	[SerializeField] KeyCode modeSwitchKey = KeyCode.E;
+	[SerializeField] float placeDistAdjustSensitivity = 0.5f;
 	[SerializeField] float placementDistance = 10f;
+	[SerializeField] float maxPlaceDist = 30f;
+	[SerializeField] float minPlaceDist = 4f;
 	[SerializeField] float deleteDistance = 10f;
 	[SerializeField] LayerMask castObstructions;	//objects that can block the player's interaction path
 	[SerializeField] LayerMask placementObstructions;	//objects that prevent block placement
@@ -77,6 +80,8 @@ public class BlockPlacement : MonoBehaviour {
 
 	void OnDisable(){
 		//need to switch the appearance of the delete-highlighted block back to normal
+		if(currentDeleteTarget != null)
+			currentDeleteTarget.EditorResetMaterial();
 	}
 
 
@@ -108,6 +113,7 @@ public class BlockPlacement : MonoBehaviour {
 
 	//runs the whole placement behavior
 	void PlacementLogic(){
+		UserChangePlaceDist();
 		Vector3 placementPoint = SmartPlacementPoint();	//gets the location that a block would be placed, regardless of validity
 		AdjustIndicatorPosition(placementPoint);	//moves the indicator to this location
 		bool canPlace = CanPlace(placementPoint);	//checks whether this location is a valid placement point
@@ -129,6 +135,13 @@ public class BlockPlacement : MonoBehaviour {
 		Material toSwitch = canPlace ? canPlaceMaterial : noPlaceMaterial;
 		if(indicatorRenderer.material != toSwitch)	//not sure if this saves any processing power
 			indicatorRenderer.material = toSwitch;
+	}
+
+	//changes the block's placement distance when the player uses the scroll wheel
+	void UserChangePlaceDist(){
+		float scroll = Input.mouseScrollDelta.y;
+		placementDistance += scroll * placeDistAdjustSensitivity;
+		placementDistance = Mathf.Clamp(placementDistance, minPlaceDist, maxPlaceDist);
 	}
 
 	//returns the placement point for the block; if the raycast hits a target then it will be that point plus the relevant
@@ -192,7 +205,9 @@ public class BlockPlacement : MonoBehaviour {
 
 	//runs the whole deletion behavior
 	void DeleteLogic(){
-		FindTargetBlock();	//try to find a block
+		EnvironmentBlock newTarget = FindTargetBlock();	//try to find a block
+		SetDeleteTarget(newTarget);
+
 		if (currentDeleteTarget == null)	//no block detected?
 			return;
 		
@@ -203,21 +218,28 @@ public class BlockPlacement : MonoBehaviour {
 	}
 
 	//tries to find a target that could be deleted
-	void FindTargetBlock(){
+	EnvironmentBlock FindTargetBlock(){
 		RaycastHit hit;
 		if (!Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out hit, placementDistance, castObstructions))	//facing anything?
-			currentDeleteTarget = null;
+			return null;
 		else
-			currentDeleteTarget = hit.collider.gameObject.GetComponent<EnvironmentBlock>();
+			return hit.collider.gameObject.GetComponent<EnvironmentBlock>();
 	}
 
-	//adjusts the current delete target and changes the look of the target to indicate which is being selected
-	void DeletionTargetControl(EnvironmentBlock newTarget){
+	//sets the delete target and changes the look of the old and new targets to indicate which is being selected
+	void SetDeleteTarget(EnvironmentBlock newTarget){
 		if (currentDeleteTarget == newTarget)	//if it's the same target, don't worry about it
 			return;
 		//otherwise, change this target's color back to normal
+		if(currentDeleteTarget != null)
+			currentDeleteTarget.EditorResetMaterial();
 
 		//and set the new target's color to the indicator color if it isn't null
+		if(newTarget != null)
+			newTarget.EditorChangeMaterial(noPlaceMaterial);
+
+		//finally set the current target to the new target
+		currentDeleteTarget = newTarget;
 	}
 
 	//destroys a block

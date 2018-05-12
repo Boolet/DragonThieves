@@ -259,8 +259,11 @@ MonoBehaviour:
   placementIndicator: {fileID: 0}
   canPlaceMaterial: {fileID: 2100000, guid: d3b6bceefdd8044e0a9923a539d7d849, type: 2}
   noPlaceMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
-  modeSwitchKey: 101
+  modeSwitchKey: 102
+  placeDistAdjustSensitivity: 0.5
   placementDistance: 10
+  maxPlaceDist: 30
+  minPlaceDist: 4
   deleteDistance: 10
   castObstructions:
     serializedVersion: 2

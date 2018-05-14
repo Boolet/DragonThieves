@@ -13,7 +13,7 @@ using UnityEngine;
 /// 
 /// Controls:
 /// Left Mouse to place or delete (hardcoded for now)
-/// E to switch modes (serialized)
+/// F to switch modes (serialized)
 /// 
 /// Usage:
 /// Attach to player object; it or its child should have the camera attached
@@ -26,7 +26,11 @@ public class BlockPlacement : MonoBehaviour {
 	[SerializeField] Material canPlaceMaterial;
 	[SerializeField] Material noPlaceMaterial;
 
-	[SerializeField] KeyCode modeSwitchKey = KeyCode.E;
+	[SerializeField] KeyCode modeSwitchKey = KeyCode.F;
+	[SerializeField] KeyCode scaleUpVert = KeyCode.U;
+	[SerializeField] KeyCode scaleDownVert = KeyCode.J;
+	[SerializeField] KeyCode scaleUpHorz = KeyCode.I;
+	[SerializeField] KeyCode scaleDownHorz = KeyCode.K;
 	[SerializeField] float placeDistAdjustSensitivity = 0.5f;
 	[SerializeField] float placementDistance = 10f;
 	[SerializeField] float maxPlaceDist = 30f;
@@ -114,6 +118,8 @@ public class BlockPlacement : MonoBehaviour {
 	//runs the whole placement behavior
 	void PlacementLogic(){
 		UserChangePlaceDist();
+		UserChangeBlockScale();
+		AdjustIndicatorScale(boxDimensions);
 		Vector3 placementPoint = SmartPlacementPoint();	//gets the location that a block would be placed, regardless of validity
 		AdjustIndicatorPosition(placementPoint);	//moves the indicator to this location
 		bool canPlace = CanPlace(placementPoint);	//checks whether this location is a valid placement point
@@ -124,6 +130,46 @@ public class BlockPlacement : MonoBehaviour {
 			PlaceBlock(placementPoint);	//then spawn the block
 		}
 	}
+
+	//--------------------------------
+	// placement modifiers
+	//--------------------------------
+
+	//changes the block's placement distance when the player uses the scroll wheel
+	void UserChangePlaceDist(){
+		float scroll = Input.mouseScrollDelta.y;
+		placementDistance += scroll * placeDistAdjustSensitivity;
+		placementDistance = Mathf.Clamp(placementDistance, minPlaceDist, maxPlaceDist);
+	}
+
+	void UserChangeBlockScale(){
+
+		//there must be a better way to do this involving the cross product and/or the dot product
+
+		Vector3 playerLook = playerCam.transform.forward;
+		Vector3 playerUp = playerCam.transform.up;
+		Quaternion resetter = Quaternion.FromToRotation(playerLook, Vector3.forward);
+		Vector3 playerRelativeUp = resetter * playerUp;
+		float relativeUpRotation = Vector3.Angle(playerRelativeUp, Vector3.up);
+		bool primaryY = relativeUpRotation < 45 || relativeUpRotation > 135;
+
+		if (playerLook.x >= playerLook.y && playerLook.x >= playerLook.z){
+			//working on the y-z plane
+			if (primaryY){
+				//scale up is y, scale right is z
+			}
+		} else if (playerLook.z >= playerLook.y && playerLook.z >= playerLook.x){
+			//working on the x-y plane
+			if (primaryY){
+				//scale up is y, scale right is x
+			}
+		}
+	}
+
+
+	//--------------------------------
+	// placement indicator adjustments
+	//--------------------------------
 
 	//moves the placement indicator
 	void AdjustIndicatorPosition(Vector3 point){
@@ -137,25 +183,14 @@ public class BlockPlacement : MonoBehaviour {
 			indicatorRenderer.material = toSwitch;
 	}
 
-	//changes the block's placement distance when the player uses the scroll wheel
-	void UserChangePlaceDist(){
-		float scroll = Input.mouseScrollDelta.y;
-		placementDistance += scroll * placeDistAdjustSensitivity;
-		placementDistance = Mathf.Clamp(placementDistance, minPlaceDist, maxPlaceDist);
+	void AdjustIndicatorScale(Vector3 scale){
+		placementIndicator.transform.localScale = scale;
 	}
 
-	//returns the placement point for the block; if the raycast hits a target then it will be that point plus the relevant
-	//dimension of the block as an offset, otherwise it will just be the end of the raycast
-	Vector3 SmartPlacementPoint(){
-		RaycastHit hit;	//if there is a hit, this will be it
-		Vector3 spawnPoint;	//the actual point that the object will be spawned in; it is not correct immediately
-		if (PlacementPoint(out spawnPoint, out hit)){
-			Vector3 offset = hit.normal;
-			offset.Scale(boxDimensions / 2f);
-			spawnPoint = hit.point + offset;	//if there is a hit, stack the box onto the hit block
-		}
-		return RoundToGrid(spawnPoint);	//snap the point to the grid and return it
-	}
+
+	//--------------------------------
+	// placement effects
+	//--------------------------------
 
 	//spawns a block
 	void PlaceBlock(Vector3 placementPoint){
@@ -172,6 +207,11 @@ public class BlockPlacement : MonoBehaviour {
 		}
 	}
 
+
+	//--------------------------------
+	// placement verification
+	//--------------------------------
+
 	//gives the colliders on MASK layers that intersect with the potential block placement at point POINT
 	Collider[] BlockOverlapColliders(Vector3 point, LayerMask mask){
 		return Physics.OverlapBox(point, boxDimensions / 2f, Quaternion.identity, mask);
@@ -180,6 +220,24 @@ public class BlockPlacement : MonoBehaviour {
 	//whether the block can be placed here
 	bool CanPlace(Vector3 point){
 		return BlockOverlapColliders(point, placementObstructions).Length == 0;
+	}
+
+
+	//--------------------------------
+	// placement location
+	//--------------------------------
+
+	//returns the placement point for the block; if the raycast hits a target then it will be that point plus the relevant
+	//dimension of the block as an offset, otherwise it will just be the end of the raycast
+	Vector3 SmartPlacementPoint(){
+		RaycastHit hit;	//if there is a hit, this will be it
+		Vector3 spawnPoint;	//the actual point that the object will be spawned in; it is not correct immediately
+		if (PlacementPoint(out spawnPoint, out hit)){
+			Vector3 offset = hit.normal;
+			offset.Scale(boxDimensions / 2f);
+			spawnPoint = hit.point + offset;	//if there is a hit, stack the box onto the hit block
+		}
+		return RoundToGrid(spawnPoint);	//snap the point to the grid and return it
 	}
 
 	//gives a placement point if there is no hit, otherwise gives a hit

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script for the domino map editor. This will not be necessary in play mode
+/// </summary>
 public class EnvironmentBlock : MonoBehaviour {
 
 	Dictionary<Vector3, BlockFace> quadsDict = new Dictionary<Vector3, BlockFace>();
@@ -11,10 +14,6 @@ public class EnvironmentBlock : MonoBehaviour {
 		foreach (BlockFace bf in transform.GetComponentsInChildren<BlockFace>()){
 			quadsDict.Add(bf.transform.localPosition.normalized, bf);
 		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
 	}
 
 	public void EditorChangeMaterial(Material editorOverride){

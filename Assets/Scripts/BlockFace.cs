@@ -9,11 +9,13 @@ using UnityEngine;
 public class BlockFace : MonoBehaviour {
 
 	[SerializeField] Material placeableMaterial;
+	[SerializeField] int placeableLayer;
 	[SerializeField] Material unplaceableMaterial;
+	[SerializeField] int unplaceableLayer;
 
 	MeshRenderer meshRenderer;
 	Material correctMaterial;
-	Material overrideMaterial;	//for the editor
+	Material overrideMaterial = null;	//for the editor
 
 	bool placeable = true;
 	public bool Placeable
@@ -23,20 +25,26 @@ public class BlockFace : MonoBehaviour {
 		}
 		set{
 			placeable = value;
-			if (placeable)
-				correctMaterial = placeableMaterial;
-			else
-				correctMaterial = unplaceableMaterial;
-			if (overrideMaterial == null)
-				meshRenderer.material = correctMaterial;
+			PlaceableUpdate();
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
 		meshRenderer = GetComponent<MeshRenderer>();
-		correctMaterial = placeableMaterial;
-		meshRenderer.material = correctMaterial;
+		PlaceableUpdate();
+	}
+
+	void PlaceableUpdate(){
+		if (placeable){
+			correctMaterial = placeableMaterial;
+			gameObject.layer = placeableLayer;
+		} else{
+			correctMaterial = unplaceableMaterial;
+			gameObject.layer = unplaceableLayer;
+		}
+		if (overrideMaterial == null)
+			meshRenderer.material = correctMaterial;
 	}
 
 	//overrides the look of this object; set it to null to reset

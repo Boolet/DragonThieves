@@ -35,7 +35,7 @@ public class DominoSpawner : NetworkBehaviour {
 
 	void Awake(){
 		supporter = FindObjectOfType<SingletonSupport>();
-		if(!supporter.fixedGravityMode)
+		if(supporter != null && !supporter.fixedGravityMode)
 			TakeAvailablePlacement();
 		if (ghostInstance != null){
 			ghostInstance.transform.SetParent(null);
@@ -73,7 +73,7 @@ public class DominoSpawner : NetworkBehaviour {
 		PlaceGhost();
 		CheckOverlap();
 		SetGhostColor();
-		if (Input.GetMouseButtonUp(0) && supporter.allowSpawn){
+		if (Input.GetMouseButtonUp(0) && (supporter == null || supporter.allowSpawn)){
 			DoDomino();
 		}
 	}

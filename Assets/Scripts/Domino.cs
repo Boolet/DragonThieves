@@ -19,8 +19,7 @@ public class Domino : NetworkBehaviour{
 	}
 
 	[Server]
-	public void CmdReset(){
-		//print("CmdReset on domino");
+	public void Reset(){
 		RpcReset();
 		dominoBody.velocity = Vector3.zero;
 		dominoBody.angularVelocity = Vector3.zero;

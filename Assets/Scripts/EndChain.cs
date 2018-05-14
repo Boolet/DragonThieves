@@ -5,24 +5,27 @@ using UnityEngine.UI;
 
 public class EndChain : MonoBehaviour {
 
-    GameObject WinScreen;
+	ProgressTracker tracker;
+	bool hit = false;
 
     private void Awake()
     {
-        WinScreen = GameObject.FindGameObjectWithTag("Win");
-        WinScreen.SetActive(false);
+		tracker = FindObjectOfType<ProgressTracker>();
     }
 
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Domino")
-            if (collision.gameObject.GetComponent<DominoChain>().hitByDomino)
-                WinScreen.SetActive(true);
+		if (collision.gameObject.tag == "Domino" && !hit){
+			if (collision.gameObject.GetComponent<DominoChain>().hitByDomino){
+				hit = true;
+				tracker.TargetHit();
+			}
+		}
     }
 
     public void Reset()
     {
-        WinScreen.SetActive(false);
+		hit = false;
     }
 }

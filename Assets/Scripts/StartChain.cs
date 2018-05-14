@@ -31,7 +31,8 @@ public class StartChain : NetworkBehaviour {
     }
 
 	[Server]
-	public void CmdReset(){
+	public void Reset(){
+		canReset = false;
 		RpcReset();
 	}
 		

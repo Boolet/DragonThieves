@@ -5,13 +5,12 @@ using UnityEngine.Networking;
 
 public class PlayerChainControl : NetworkBehaviour {
 
-	DominoTracker tracker;
-	StartChain starter;
+	SingletonSupport supporter;
 
 	// Use this for initialization
 	void Start () {
-		tracker = FindObjectOfType<DominoTracker>();
-		starter = FindObjectOfType<StartChain>();
+		supporter = FindObjectOfType<SingletonSupport>();	//will need to use this reference to disable all players' domino placement control
+															//while the dominos are falling
 	}
 	
 	// Update is called once per frame

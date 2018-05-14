@@ -5,14 +5,17 @@ using UnityEngine.Networking;
 
 public class DominoTracker : NetworkBehaviour{
 
+	//public void 
+
 	[Server]
 	public void CmdReset(){
 		foreach (Domino d in FindObjectsOfType<Domino>()){
-			d.CmdReset();
+			d.Reset();
 		}
 		foreach (StartChain sc in FindObjectsOfType<StartChain>()){
-			sc.CmdReset();
+			sc.Reset();
 		}
+		FindObjectOfType<ProgressTracker>().Reset();
 	}
 
 	[ClientRpc]

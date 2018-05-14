@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class EnvironmentBlock : MonoBehaviour {
 
-	MeshRenderer[] childQuads;
-	Material[] childDefaultMaterials;
+	Dictionary<Vector3, BlockFace> quadsDict = new Dictionary<Vector3, BlockFace>();
 
 	// Use this for initialization
 	void Start () {
-		childQuads = transform.GetComponentsInChildren<MeshRenderer>();
-		childDefaultMaterials = new Material[childQuads.Length];
-		for (int i = 0; i < childQuads.Length; ++i)
-			childDefaultMaterials[i] = childQuads[i].material;
+		foreach (BlockFace bf in transform.GetComponentsInChildren<BlockFace>()){
+			quadsDict.Add(bf.transform.localPosition.normalized, bf);
+		}
 	}
 	
 	// Update is called once per frame
@@ -20,12 +18,7 @@ public class EnvironmentBlock : MonoBehaviour {
 	}
 
 	public void EditorChangeMaterial(Material editorOverride){
-		foreach (MeshRenderer mr in childQuads)
-			mr.material = editorOverride;
-	}
-
-	public void EditorResetMaterial(){
-		for (int i = 0; i < childQuads.Length; ++i)
-			childQuads[i].material = childDefaultMaterials[i];
+		foreach (KeyValuePair<Vector3, BlockFace> kv in quadsDict)
+			kv.Value.SetMaterialOverride(editorOverride);
 	}
 }

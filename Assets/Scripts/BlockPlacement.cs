@@ -81,7 +81,7 @@ public class BlockPlacement : MonoBehaviour {
 	void OnDisable(){
 		//need to switch the appearance of the delete-highlighted block back to normal
 		if(currentDeleteTarget != null)
-			currentDeleteTarget.EditorResetMaterial();
+			currentDeleteTarget.EditorChangeMaterial(null);
 	}
 
 
@@ -232,7 +232,7 @@ public class BlockPlacement : MonoBehaviour {
 			return;
 		//otherwise, change this target's color back to normal
 		if(currentDeleteTarget != null)
-			currentDeleteTarget.EditorResetMaterial();
+			currentDeleteTarget.EditorChangeMaterial(null);
 
 		//and set the new target's color to the indicator color if it isn't null
 		if(newTarget != null)

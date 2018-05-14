@@ -32,6 +32,7 @@ public class PlayerChainControl : NetworkBehaviour {
 
 	[Command]
 	public void CmdKnock(){
-		FindObjectOfType<StartChain>().RpcPlayerKnock();
+		foreach(StartChain sc in FindObjectsOfType<StartChain>())
+			sc.RpcPlayerKnock();
 	}
 }

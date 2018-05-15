@@ -27,7 +27,7 @@ public static class SaveLoad {
 		//You can also use any path you like
 		CheckDirectory(saveGamePath);
 		saveGamePath = CheckPath(saveGamePath, false);
-
+		Debug.Log (Application.persistentDataPath);
 		FileStream file = File.Create (saveGamePath + saveGame.savegameName + ".sav"); //you can call it anything you want including the file extension
 		bf.Serialize(file, saveGame);
 		file.Close();
@@ -36,7 +36,7 @@ public static class SaveLoad {
 	public static SaveGame LoadScene(string gameToLoad, string saveGamePath) {
 
 		saveGamePath = CheckPath(saveGamePath, false);
-
+		Debug.Log (saveGamePath);
 		if(File.Exists(saveGamePath + gameToLoad + ".sav")) {
 
 			BinaryFormatter bf = new BinaryFormatter();

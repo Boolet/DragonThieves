@@ -458,7 +458,7 @@ public class SaveLoadUtility : MonoBehaviour {
 			//if the GameObject has a PersistentGameObject component, ignore it. (Cameras, Managers, etc. which should survive loading)
 			//these kind of GO's shouldn't have an ObjectIdentifier component! You can save and load single components with the PackComponent and UnpackComponent methods.
 			//An empty component is used to mark a GameObject as persistent so the tag is still available for other uses
-			if(go.GetComponent<PersistenceMarker>() == true) {
+			if(go.GetComponent<PersistenceMarker>() == true || go.GetComponentInParent<PersistenceMarker>() == true) {
 				if(debugController.isPersistent) {
 					Debug.Log("[ClearScene] " + "Keeping peristent GameObject: " + go.name);
 				}

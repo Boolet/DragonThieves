@@ -9,6 +9,7 @@ TagManager:
   - Domino
   - Canvas
   - Win
+  - DontDestroy
   layers:
   - Default
   - TransparentFX

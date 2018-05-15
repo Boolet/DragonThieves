@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4796520196875582}
   - component: {fileID: 114570799538238640}
   - component: {fileID: 114021164682927856}
+  - component: {fileID: 114199788180658698}
   m_Layer: 0
   m_Name: Synced Singleton
   m_TagString: Untagged
@@ -73,6 +74,23 @@ MonoBehaviour:
     i15: 102
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114199788180658698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1805797546989748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c19f3e134862e74dbc98cb514a82ef5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabName: Synced Singleton
+  id: 
+  idParent: 
+  dontSave: 0
+  componentSaveMode: 0
+  componentTypesToSave: []
 --- !u!114 &114570799538238640
 MonoBehaviour:
   m_ObjectHideFlags: 1

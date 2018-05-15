@@ -13,8 +13,9 @@ public class Game {
    public Domino start_domino;
    public Game()
         {
+		
         dominos = GameObject.FindObjectsOfType<Domino>();
-
+		Debug.Log ("Found Dominos");
     }
 
     }

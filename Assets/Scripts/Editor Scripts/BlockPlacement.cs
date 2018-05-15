@@ -66,6 +66,8 @@ public class BlockPlacement : MonoBehaviour {
 
 		if (placementIndicator == null){
 			placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		} else{
+			placementIndicator = Instantiate(placementIndicator);	//use the prefab
 		}
 		placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
 		indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();

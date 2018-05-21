@@ -260,6 +260,12 @@ MonoBehaviour:
   canPlaceMaterial: {fileID: 2100000, guid: d3b6bceefdd8044e0a9923a539d7d849, type: 2}
   noPlaceMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
   modeSwitchKey: 102
+  scaleUpVert: 117
+  scaleDownVert: 106
+  scaleUpHorz: 105
+  scaleDownHorz: 107
+  scaleAdjustSensitivity: 0.1
+  minimumSize: 1
   placeDistAdjustSensitivity: 0.5
   placementDistance: 10
   maxPlaceDist: 30

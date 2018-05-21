@@ -31,6 +31,8 @@ public class BlockPlacement : MonoBehaviour {
 	[SerializeField] KeyCode scaleDownVert = KeyCode.J;
 	[SerializeField] KeyCode scaleUpHorz = KeyCode.I;
 	[SerializeField] KeyCode scaleDownHorz = KeyCode.K;
+	[SerializeField] float scaleAdjustSensitivity = 0.1f;
+	[SerializeField][Range(1f, float.PositiveInfinity)] float minimumSize = 1f;
 	[SerializeField] float placeDistAdjustSensitivity = 0.5f;
 	[SerializeField] float placementDistance = 10f;
 	[SerializeField] float maxPlaceDist = 30f;
@@ -48,6 +50,7 @@ public class BlockPlacement : MonoBehaviour {
 
 	MeshRenderer indicatorRenderer;
 	Camera playerCam;
+	Vector3 internalScale = Vector3.one;
 	Vector3 boxDimensions = Vector3.one;
 	BlockPlaceBehavior behavior = BlockPlaceBehavior.Place;
 	EnvironmentBlock currentDeleteTarget = null;
@@ -144,28 +147,32 @@ public class BlockPlacement : MonoBehaviour {
 		placementDistance = Mathf.Clamp(placementDistance, minPlaceDist, maxPlaceDist);
 	}
 
+	//changes the block's scale along the player's up and right axes
+	//
+	//note that this uses objective orientation, so if the block or 
+	//object is allowed to rotate in the future this will not work
 	void UserChangeBlockScale(){
+		Vector3 verticalScaleAxis = GreatestComponent(playerCam.transform.up).normalized;
+		Vector3 horizontalScaleAxis = GreatestComponent(playerCam.transform.right).normalized;
 
-		//there must be a better way to do this involving the cross product and/or the dot product
+		internalScale += verticalScaleAxis * ( (Input.GetKey(scaleUpVert)?1:0) + (Input.GetKey(scaleDownVert)?-1:0) ) * scaleAdjustSensitivity;
+		internalScale += horizontalScaleAxis * ( (Input.GetKey(scaleUpHorz)?1:0) + (Input.GetKey(scaleDownHorz)?-1:0) ) * scaleAdjustSensitivity;
 
-		Vector3 playerLook = playerCam.transform.forward;
-		Vector3 playerUp = playerCam.transform.up;
-		Quaternion resetter = Quaternion.FromToRotation(playerLook, Vector3.forward);
-		Vector3 playerRelativeUp = resetter * playerUp;
-		float relativeUpRotation = Vector3.Angle(playerRelativeUp, Vector3.up);
-		bool primaryY = relativeUpRotation < 45 || relativeUpRotation > 135;
+		internalScale = MinimumScaleSize(internalScale);
+		boxDimensions = RoundToGrid(internalScale);
+	}
 
-		if (playerLook.x >= playerLook.y && playerLook.x >= playerLook.z){
-			//working on the y-z plane
-			if (primaryY){
-				//scale up is y, scale right is z
-			}
-		} else if (playerLook.z >= playerLook.y && playerLook.z >= playerLook.x){
-			//working on the x-y plane
-			if (primaryY){
-				//scale up is y, scale right is x
-			}
-		}
+	//returns the greatest component of the source vector
+	Vector3 GreatestComponent(Vector3 source){
+		if (Mathf.Abs(source.x) > Mathf.Abs(source.y) && Mathf.Abs(source.x) > Mathf.Abs(source.z))
+			return Vector3.right * source.x;
+		if (Mathf.Abs(source.y) > Mathf.Abs(source.z))
+			return Vector3.up * source.y;
+		return Vector3.forward * source.z;
+	}
+
+	Vector3 MinimumScaleSize(Vector3 source){
+		return new Vector3(Mathf.Max(source.x, minimumSize), Mathf.Max(source.y, minimumSize), Mathf.Max(source.z, minimumSize));
 	}
 
 
@@ -216,7 +223,8 @@ public class BlockPlacement : MonoBehaviour {
 
 	//gives the colliders on MASK layers that intersect with the potential block placement at point POINT
 	Collider[] BlockOverlapColliders(Vector3 point, LayerMask mask){
-		return Physics.OverlapBox(point, boxDimensions / 2f, Quaternion.identity, mask);
+		Vector3 overlapDimensions = (boxDimensions / 2f) - Vector3.one * Vector3.kEpsilon;
+		return Physics.OverlapBox(point, overlapDimensions, Quaternion.identity, mask);
 	}
 
 	//whether the block can be placed here
@@ -254,6 +262,8 @@ public class BlockPlacement : MonoBehaviour {
 	}
 
 	//rounds a vector3 to the nearest grid point
+	//
+	//this could be changed to handle any grid size! Not just size one.
 	Vector3 RoundToGrid(Vector3 point){
 		return new Vector3(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y), Mathf.RoundToInt(point.z));
 	}

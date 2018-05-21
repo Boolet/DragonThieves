@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 4360103016621644}
   - component: {fileID: 65499838493965108}
   - component: {fileID: 114786164530221542}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Environment Block Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

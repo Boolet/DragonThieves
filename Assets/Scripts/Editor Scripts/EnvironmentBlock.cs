@@ -16,6 +16,7 @@ public class EnvironmentBlock : MonoBehaviour {
 		}
 	}
 
+	//this is local - used when the player mouses over a block with delete mode on
 	public void EditorChangeMaterial(Material editorOverride){
 		foreach (KeyValuePair<Vector3, BlockFace> kv in quadsDict)
 			kv.Value.SetMaterialOverride(editorOverride);

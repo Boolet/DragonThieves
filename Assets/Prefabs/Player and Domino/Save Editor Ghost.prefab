@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 114810137215969636}
   - component: {fileID: 114941818996359738}
   - component: {fileID: 114143236359858414}
+  - component: {fileID: 114503793857216768}
   m_Layer: 0
   m_Name: Save Editor Ghost
   m_TagString: Untagged
@@ -255,6 +256,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9438bb7133eb41c78bcd42b8a1171e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114503793857216768
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1299843919399364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8efac2843c5a44e2ea6f5424ef5152bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modeSwitchKey: 9
 --- !u!114 &114783502707207442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -276,6 +289,8 @@ MonoBehaviour:
   scaleDownVert: 106
   scaleUpHorz: 105
   scaleDownHorz: 107
+  scaleAdjustSensitivity: 0.1
+  minimumSize: 1
   placeDistAdjustSensitivity: 0.5
   placementDistance: 10
   maxPlaceDist: 30

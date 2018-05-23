@@ -76,11 +76,11 @@ public class SaveLoadMenu : MonoBehaviour {
 
 
 		//The classic hotkeys for quicksaving and quickloading
-		if(Input.GetKeyDown(KeyCode.O)) {
+		if(Input.GetKeyDown(KeyCode.N)) {
 			slu.SaveGame(slu.quickSaveName);//Use this for quicksaving, which is basically just using a constant savegame name.
 		}
 
-		if(Input.GetKeyDown(KeyCode.I)) {
+		if(Input.GetKeyDown(KeyCode.M)) {
 			slu.LoadGame(slu.quickSaveName);//Use this for quickloading, which is basically just using a constant savegame name.
 
 		}

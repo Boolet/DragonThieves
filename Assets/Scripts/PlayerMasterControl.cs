@@ -15,9 +15,9 @@ public class PlayerMasterControl : MonoBehaviour {
 	BlockPlacement blockBuilder;
 	PlayerChainControl chainControl;
 	CameraGhostControl playerMovement;
-
-	// Use this for initialization
-	void Start () {
+    [SerializeField] KeyCode modeSwitchKey = KeyCode.Tab;
+    // Use this for initialization
+    void Start () {
 		Initialize();
 	}
 
@@ -38,9 +38,30 @@ public class PlayerMasterControl : MonoBehaviour {
 		if (playerMovement == null)
 			playerMovement = GetComponentInChildren<CameraGhostControl>();
 	}
-	
+	void nextMode()
+    {
+        if (dominoBuilder.enabled == true)
+        {
+            Debug.Log("Switching from Domino builder to block...");
+            dominoBuilder.enabled = false;
+            blockBuilder.enabled = true;
+            
+
+            return;
+        }
+        else if (dominoBuilder.enabled == false && blockBuilder.enabled == true)
+        {
+            Debug.Log("Switching from block builder to domino...");
+            dominoBuilder.enabled = true;
+            blockBuilder.enabled = false;
+        }
+    }
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetKeyDown(modeSwitchKey))
+        {
+            nextMode();
+        }
 		
 	}
 }

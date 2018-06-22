@@ -273,10 +273,10 @@ MonoBehaviour:
   deleteDistance: 10
   castObstructions:
     serializedVersion: 2
-    m_Bits: 257
+    m_Bits: 3329
   placementObstructions:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 3328
   toyLayer:
     serializedVersion: 2
     m_Bits: 512

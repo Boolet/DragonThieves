@@ -4,8 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// TO DO:
-/// +Change block target color when in delete mode
-/// +Allow the user to scale the block to be placed using some interface
+/// +Show the directions that the scaling controls will operate on
+/// +Add network functionality
 /// 
 /// The player's controls for placing and deleting blocks within the editor mode. The blocks are considered
 /// to be of higher priority than other objects such as dominos and any toys that may be included in the game,
@@ -13,7 +13,9 @@ using UnityEngine;
 /// 
 /// Controls:
 /// Left Mouse to place or delete (hardcoded for now)
-/// F to switch modes (serialized)
+/// F to switch modes - Delete and Place mode (serialized)
+/// U-J to scale up or down on the vertical axis (serialized)
+/// I-K to scale up or down on the horizontal axis (serialized)
 /// 
 /// Usage:
 /// Attach to player object; it or its child should have the camera attached
@@ -87,10 +89,21 @@ public class BlockPlacement : MonoBehaviour {
 			DeleteLogic();
 	}
 
+	void OnEnable(){
+		if (placementIndicator != null)
+			placementIndicator.SetActive(true);
+	}
+
 	void OnDisable(){
 		//need to switch the appearance of the delete-highlighted block back to normal
 		if(currentDeleteTarget != null)
 			currentDeleteTarget.EditorChangeMaterial(null);
+		//and make the indicator disappear
+		placementIndicator.SetActive(false);
+	}
+
+	void OnDestroy(){
+		Destroy(placementIndicator);
 	}
 
 
@@ -152,8 +165,8 @@ public class BlockPlacement : MonoBehaviour {
 	//note that this uses objective orientation, so if the block or 
 	//object is allowed to rotate in the future this will not work
 	void UserChangeBlockScale(){
-		Vector3 verticalScaleAxis = GreatestComponent(playerCam.transform.up).normalized;
-		Vector3 horizontalScaleAxis = GreatestComponent(playerCam.transform.right).normalized;
+		Vector3 verticalScaleAxis = GreatestComponent(playerCam.transform.up, true);
+		Vector3 horizontalScaleAxis = GreatestComponent(playerCam.transform.right, true);
 
 		internalScale += verticalScaleAxis * ( (Input.GetKey(scaleUpVert)?1:0) + (Input.GetKey(scaleDownVert)?-1:0) ) * scaleAdjustSensitivity;
 		internalScale += horizontalScaleAxis * ( (Input.GetKey(scaleUpHorz)?1:0) + (Input.GetKey(scaleDownHorz)?-1:0) ) * scaleAdjustSensitivity;
@@ -163,12 +176,12 @@ public class BlockPlacement : MonoBehaviour {
 	}
 
 	//returns the greatest component of the source vector
-	Vector3 GreatestComponent(Vector3 source){
+	Vector3 GreatestComponent(Vector3 source, bool parallelIndicator){
 		if (Mathf.Abs(source.x) > Mathf.Abs(source.y) && Mathf.Abs(source.x) > Mathf.Abs(source.z))
-			return Vector3.right * source.x;
+			return Vector3.right * (parallelIndicator?1:source.x);
 		if (Mathf.Abs(source.y) > Mathf.Abs(source.z))
-			return Vector3.up * source.y;
-		return Vector3.forward * source.z;
+			return Vector3.up * (parallelIndicator?1:source.y);
+		return Vector3.forward * (parallelIndicator?1:source.z);
 	}
 
 	Vector3 MinimumScaleSize(Vector3 source){

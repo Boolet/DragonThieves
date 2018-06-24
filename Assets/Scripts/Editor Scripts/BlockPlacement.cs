@@ -99,11 +99,13 @@ public class BlockPlacement : MonoBehaviour {
 		if(currentDeleteTarget != null)
 			currentDeleteTarget.EditorChangeMaterial(null);
 		//and make the indicator disappear
-		placementIndicator.SetActive(false);
+        if(placementIndicator != null)
+		    placementIndicator.SetActive(false);
 	}
 
 	void OnDestroy(){
-		Destroy(placementIndicator);
+        if (placementIndicator != null)
+		    Destroy(placementIndicator);
 	}
 
 

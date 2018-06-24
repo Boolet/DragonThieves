@@ -1,0 +1,12 @@
+	There are several important layers for use in the editor and domino system.
+
+	First of all, all dominos are on the Domino layer.
+	The domino spawning system uses this in order to delete dominos.
+
+	The Block layer is a special layer used in the level editor.
+	Each block that is placed has a collider on the Block layer that the editor uses for its raycasting.
+	However, in order to facilitate specializing individual faces of each block to be Domino Spawn Surface or Nospawn Surface while still in the editor, the block’s faces have their own, separate layers and colliders.
+	The way this works essentially is that the domino spawn system’s raycasting will IGNORE the Block layer and therefore only interact with the block’s faces.
+	The block editor system will IGNORE the Domino Spawn Surface layer AND the Nospawn Surface layer, and therefore only interact with the block’s body.
+
+	Additional functionality will be added to the editor to allow the user to specify which faces they want to be Spawn Surfaces and which they want to be Nospawn Surfaces.

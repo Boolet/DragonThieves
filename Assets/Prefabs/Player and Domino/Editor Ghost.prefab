@@ -38,12 +38,12 @@ GameObject:
   - component: {fileID: 114215069503264098}
   - component: {fileID: 114469019530463464}
   - component: {fileID: 114412267547558190}
-  - component: {fileID: 114010886916146920}
   - component: {fileID: 23609049771841416}
   - component: {fileID: 33576956836256328}
   - component: {fileID: 114783502707207442}
   - component: {fileID: 114810137215969636}
   - component: {fileID: 114941818996359738}
+  - component: {fileID: 114054935200169638}
   m_Layer: 0
   m_Name: Editor Ghost
   m_TagString: Untagged
@@ -127,6 +127,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
@@ -155,27 +156,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1299843919399364}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114010886916146920
+--- !u!114 &114054935200169638
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1299843919399364}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 724bbbea759bd44278e63f355a2df20c, type: 3}
+  m_Script: {fileID: 11500000, guid: 6c882c25a0dd14596958744846e8c8fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cameraObject: {fileID: 20163478748249750}
+  canPlaceMaterial: {fileID: 2100000, guid: d3b6bceefdd8044e0a9923a539d7d849, type: 2}
+  noPlaceMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
   dominoPrefab: {fileID: 114041318084139758, guid: a15bac403dcb34f96a595c417ad21e40,
     type: 2}
-  ghostInstance: {fileID: 0}
-  badGhostMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
-  gravityDirection: {x: -1, y: 0, z: 0}
-  surfaceTolerance: 2
+  placementIndicatorPrefab: {fileID: 1857711736614530, guid: 6504f7273ec314a56823832ac49a6b8a,
+    type: 2}
   raycastTargets:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 4294965193
   spawnTargets:
     serializedVersion: 2
     m_Bits: 256
@@ -273,10 +274,10 @@ MonoBehaviour:
   deleteDistance: 10
   castObstructions:
     serializedVersion: 2
-    m_Bits: 3329
+    m_Bits: 2049
   placementObstructions:
     serializedVersion: 2
-    m_Bits: 3328
+    m_Bits: 2048
   toyLayer:
     serializedVersion: 2
     m_Bits: 512

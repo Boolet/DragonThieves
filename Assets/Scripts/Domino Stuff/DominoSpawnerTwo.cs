@@ -11,7 +11,6 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	[SerializeField] Material noPlaceMaterial;
 	[SerializeField] DominoGravity dominoPrefab;
     [SerializeField] GameObject placementIndicatorPrefab;
-	[SerializeField] float surfaceTolerance = 2f;
 	[SerializeField] LayerMask raycastTargets = ~0;	//must be a superset of both spawnTargets and dominoTargets; default to everything
 	[SerializeField] LayerMask spawnTargets;
 	[SerializeField] LayerMask dominoTargets;
@@ -20,7 +19,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 
 	GameObject placementIndicator;
 	MeshRenderer indicatorRenderer;
-	SingletonSupport supporter;
+	//SingletonSupport supporter;
 	float dominoRotation = 0f;
 
 	GameObject targetToDelete = null;
@@ -31,8 +30,10 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	// control
 	//--------------------------------
 
-	void Awake(){
-		/*
+	void Start(){
+        if (!isLocalPlayer)
+            return;
+        /*
 		supporter = FindObjectOfType<SingletonSupport>();
 		if(supporter != null && !supporter.fixedGravityMode)
 			TakeAvailablePlacement();
@@ -40,6 +41,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		//rotate the player object - hopefully it works without issue
 		transform.up = -gravityDirection;
 		*/
+        print("Start");
 		SpawnIndicator();
 	}
 
@@ -47,15 +49,25 @@ public class DominoSpawnerTwo : NetworkBehaviour {
         if (!isLocalPlayer)
             return;
         //run functionality
+        float scroll = Input.mouseScrollDelta.y;
+        bool activate = Input.GetKeyDown(KeyCode.Mouse0);
+        RotateDomino(scroll);
+        DominoAddRemoveLogic(activate);
     }
 
     void OnEnable(){
+        if (!isLocalPlayer)
+            return;
         if (placementIndicator != null)
             CmdSetActive(placementIndicator, true);
             //placementIndicator.SetActive(true);
+        //else
+            //SpawnIndicator();
 	}
 
 	void OnDisable(){
+        if (!isLocalPlayer)
+            return;
         //need to switch the appearance of the delete-highlighted domino back to normal
         DelAbandonDomino();
         //and make the indicator disappear
@@ -65,7 +77,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	}
 
     void OnDestroy(){
-        CmdDestroy(placementIndicator);
+        if (!isLocalPlayer)
+            return;
+        //CmdDestroy(placementIndicator);
     }
 
     //--------------------------------
@@ -73,45 +87,46 @@ public class DominoSpawnerTwo : NetworkBehaviour {
     //--------------------------------
 
     void SpawnIndicator(){
-		//placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
-		//placementIndicator.transform.localScale = dominoPrefab.transform.localScale;
-		//placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
-		//then spawn for server
+        //placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //placementIndicator.transform.localScale = dominoPrefab.transform.localScale;
+        //placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
+        //then spawn for server
+        print("Trying to spawn");
 		CmdSpawnIndicator();
-	}
-
-	//--------------------------------
-	// user input
-	//--------------------------------
-
-	void RotateDomino(){
-		float scroll = Input.mouseScrollDelta.y;
-		dominoRotation += scroll * rotationSensitivity;
-		dominoRotation = dominoRotation % 360;
 	}
 
 	//--------------------------------
 	// domino system behavior
 	//--------------------------------
 
+    void RotateDomino(float input) {
+        dominoRotation += input * rotationSensitivity;
+        dominoRotation = dominoRotation % 360;
+    }
+
 	void DominoAddRemoveLogic(bool activate){
 		//do a raycast
 		RaycastHit hit;
 		Vector3 miss;
-		if (!CastFromCamera(out hit, out miss)){
-			//if we didn't find a hit, just hover the indicator there
-			return;
-		}
+        if (!CastFromCamera(out hit, out miss)) {
+            //if we didn't find a hit, just hover the indicator there
+            HoverLogic(miss);
+        }
 
-		//check if what we hit is a domino
-		if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0){
-			//if it is a domino, then we should be in delete mode
-		}
+        //check if what we hit is a domino
+        else if (((1 << hit.collider.gameObject.layer) & dominoTargets.value) != 0) {
+            //if it is a domino, then we should be in delete mode
+            DeletionLogic(hit, activate);
+        }
 
-		//determine whether to use delete mode, place mode, or neither
-		//update the indicator
+        //check if what we hit is a spawnable surface
+        else if (((1 << hit.collider.gameObject.layer) & spawnTargets.value) != 0) {
+            //if it is, then we should be in placement mode
+            PlacementLogic(hit, activate);
+        }
 
-		//if activate, perform the correct behavior
+        else
+            HoverLogic(hit.point);
 	}
 
 	//we did not hit anything at all
@@ -139,7 +154,8 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		AdjustIndicatorColor(canPlace);
 
 		if (canPlace && activate){
-			//then spawn the domino
+            //then spawn the domino
+            CmdSpawnDomino(placementPoint, placementRotation, -hit.normal);
 		}
 	}
 
@@ -240,27 +256,46 @@ public class DominoSpawnerTwo : NetworkBehaviour {
     /// This command instantiates the placement indicator for the player,
     /// gives authority over it to the player, spawns it for all clients,
     /// and finally sends back a reference to the object for the player to use.
+    /// 
+    /// This version does the instantiation on the server; next version
+    /// instantiates on the client
     /// </summary>
 	[Command]
     void CmdSpawnIndicator(){
+        RpcDebugOutput("CmdSpawnIndicator with conn: " + connectionToClient);
         placementIndicator = Instantiate(placementIndicatorPrefab);
+        indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
+        placementIndicator.transform.localScale = dominoPrefab.transform.localScale;
+
         NetworkServer.Spawn(placementIndicator);
-        placementIndicator.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
+        NetworkIdentity identity = placementIndicator.GetComponent<NetworkIdentity>();
+        identity.localPlayerAuthority = true;
+        identity.AssignClientAuthority(connectionToClient);
+
         TargetSpawnIndicator(connectionToClient, placementIndicator);
 	}
 
+    //this is the part of the above functionality that sends the reference to
+    //the game object back to the player
     [TargetRpc]
     void TargetSpawnIndicator(NetworkConnection target, GameObject spawnedIndicator) {
+        print("TargetSpawnIndicator with conn: " + target);
         placementIndicator = spawnedIndicator;
+        indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
+    }
+
+    [ClientRpc]
+    void RpcDebugOutput(string text) {
+        print(text);
     }
 
 	[Command]
-	void CmdSpawnDomino(Vector3 point, Vector3 normal, Vector3 gravity){
+	void CmdSpawnDomino(Vector3 point, Quaternion rotation, Vector3 gravity){
 		//bool reversed = Vector3.Angle(normal, gravity) > 90f;
-		//DominoGravity grav = Instantiate(dominoPrefab, detector.ColliderTransform().position, detector.ColliderTransform().rotation);
-		//NetworkServer.Spawn(grav.gameObject);
-		//grav.ServerSetGravity(gravity * (reversed?1:-1));
-		//grav.RpcSetGravity(gravity * (reversed?1:-1));
+		DominoGravity grav = Instantiate(dominoPrefab, point, rotation);
+		NetworkServer.Spawn(grav.gameObject);
+		grav.ServerSetGravity(gravity);
+		grav.RpcSetGravity(gravity);
 	}
 
     [Command]

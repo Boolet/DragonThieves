@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4360103016621644}
   - component: {fileID: 65499838493965108}
   - component: {fileID: 114786164530221542}
+  - component: {fileID: 114016096342125756}
   m_Layer: 11
   m_Name: Environment Block Prefab
   m_TagString: Untagged
@@ -587,6 +588,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114016096342125756
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1644974111988374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 63
+    i1: 96
+    i2: 171
+    i3: 87
+    i4: 45
+    i5: 36
+    i6: 244
+    i7: 236
+    i8: 40
+    i9: 2
+    i10: 233
+    i11: 37
+    i12: 9
+    i13: 88
+    i14: 203
+    i15: 55
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114114022037837400
 MonoBehaviour:
   m_ObjectHideFlags: 1

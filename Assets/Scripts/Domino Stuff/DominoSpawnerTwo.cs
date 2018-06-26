@@ -26,21 +26,13 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	Material targetOldMaterial;	//note: give the domino script a reference to the meshrenderer component to make this easier and faster
 
 
-	//--------------------------------
+    //=============================================================================================
 	// control
-	//--------------------------------
+    //=============================================================================================
 
 	void Start(){
         if (!isLocalPlayer)
             return;
-        /*
-		supporter = FindObjectOfType<SingletonSupport>();
-		if(supporter != null && !supporter.fixedGravityMode)
-			TakeAvailablePlacement();
-
-		//rotate the player object - hopefully it works without issue
-		transform.up = -gravityDirection;
-		*/
         print("Start");
 		SpawnIndicator();
 	}
@@ -82,9 +74,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
         //CmdDestroy(placementIndicator);
     }
 
-    //--------------------------------
+    //=============================================================================================
     // initialization functions
-    //--------------------------------
+    //=============================================================================================
 
     void SpawnIndicator(){
         //placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -95,9 +87,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		CmdSpawnIndicator();
 	}
 
-	//--------------------------------
+    //=============================================================================================
 	// domino system behavior
-	//--------------------------------
+    //=============================================================================================
 
     void RotateDomino(float input) {
         dominoRotation += input * rotationSensitivity;
@@ -171,9 +163,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		}
 	}
 
-	//--------------------------------
+    //=============================================================================================
 	// helper functions
-	//--------------------------------
+    //=============================================================================================
 
 	//does a raycast from the camera against raycast targets
 	bool CastFromCamera(out RaycastHit hit, out Vector3 miss){
@@ -193,9 +185,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		return hit.point + hit.normal * placementIndicator.transform.localScale.y / 2;
 	}
 
-	//--------------------------------
+    //=============================================================================================
 	// placement indicator adjustments
-	//--------------------------------
+    //=============================================================================================
 
 	//moves the placement indicator
 	void AdjustIndicatorPosition(Vector3 point){
@@ -219,9 +211,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		placementIndicator.transform.rotation = rotation;
 	}
 
-	//--------------------------------
+    //=============================================================================================
 	// deletion indicator functions
-	//--------------------------------
+    //=============================================================================================
 
 	//sets the targetToDelete's material back to what it was before it was selected
 	void DelRestoreDominoAppearance(){
@@ -248,9 +240,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		renderer.material = noPlaceMaterial;
 	}
 
-	//--------------------------------
+    //=============================================================================================
 	// network spawning and despawning
-	//--------------------------------
+    //=============================================================================================
 
     /// <summary>
     /// This command instantiates the placement indicator for the player,
@@ -266,11 +258,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
         placementIndicator = Instantiate(placementIndicatorPrefab);
         indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
         placementIndicator.transform.localScale = dominoPrefab.transform.localScale;
+        placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
 
-        NetworkServer.Spawn(placementIndicator);
-        NetworkIdentity identity = placementIndicator.GetComponent<NetworkIdentity>();
-        identity.localPlayerAuthority = true;
-        identity.AssignClientAuthority(connectionToClient);
+        NetworkServer.SpawnWithClientAuthority(placementIndicator, connectionToClient);
 
         TargetSpawnIndicator(connectionToClient, placementIndicator);
 	}
@@ -300,7 +290,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 
     [Command]
     void CmdSetActive(GameObject obj, bool active) {
-        obj.SetActive(false);
+        obj.SetActive(active);
         RpcSetActive(obj, active);
     }
 

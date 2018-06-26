@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114810137215969636}
   - component: {fileID: 114941818996359738}
   - component: {fileID: 114054935200169638}
+  - component: {fileID: 114757550070148250}
   m_Layer: 0
   m_Name: Editor Ghost
   m_TagString: Untagged
@@ -162,7 +163,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1299843919399364}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c882c25a0dd14596958744846e8c8fb, type: 3}
   m_Name: 
@@ -244,6 +245,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9438bb7133eb41c78bcd42b8a1171e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114757550070148250
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1299843919399364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9211e8d3b68ad46feaf640b224c241a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  switchKey: 9
 --- !u!114 &114783502707207442
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -257,7 +270,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 114786164530221542, guid: 3f60ab572d24f4ec2802e9250958cb37,
     type: 2}
-  placementIndicator: {fileID: 0}
+  indicatorPrefab: {fileID: 1857711736614530, guid: 6504f7273ec314a56823832ac49a6b8a,
+    type: 2}
   canPlaceMaterial: {fileID: 2100000, guid: d3b6bceefdd8044e0a9923a539d7d849, type: 2}
   noPlaceMaterial: {fileID: 2100000, guid: 73e9e344f542c4da1b61bdddd7cba99e, type: 2}
   modeSwitchKey: 102

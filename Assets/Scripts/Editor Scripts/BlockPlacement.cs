@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// TO DO:
@@ -20,11 +21,11 @@ using UnityEngine;
 /// Usage:
 /// Attach to player object; it or its child should have the camera attached
 /// </summary>
-public class BlockPlacement : MonoBehaviour {
+public class BlockPlacement : NetworkBehaviour {
 
 	//necessary referenes
 	[SerializeField] EnvironmentBlock blockPrefab;
-	[SerializeField] GameObject placementIndicator = null;	//can just be a cube
+    [SerializeField] GameObject indicatorPrefab;    //this will just be a cube with a network identity
 	[SerializeField] Material canPlaceMaterial;
 	[SerializeField] Material noPlaceMaterial;
 
@@ -50,6 +51,7 @@ public class BlockPlacement : MonoBehaviour {
 		Place, Delete
 	}
 
+    GameObject placementIndicator = null;   //can just be a cube
 	MeshRenderer indicatorRenderer;
 	Camera playerCam;
 	Vector3 internalScale = Vector3.one;
@@ -63,12 +65,15 @@ public class BlockPlacement : MonoBehaviour {
 	//=============================================================================================
 
 	void Start(){
+        if (!isLocalPlayer)
+            return;
 		playerCam = GetComponent<Camera>();
 		if (playerCam == null)
 			playerCam = GetComponentInChildren<Camera>();
 		if (playerCam == null)
 			throw new MissingComponentException("No camera object found on or under BlockPlacement script");
 
+        /*
 		if (placementIndicator == null){
 			placementIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		} else{
@@ -78,10 +83,15 @@ public class BlockPlacement : MonoBehaviour {
 		indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
 		if (indicatorRenderer == null)
 			throw new MissingComponentException("BlockPlacement indicator does not have a MeshRenderer component");
+		*/
+
+        CmdSpawnIndicator();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (!isLocalPlayer)
+            return;
 		ModeControl();
 		if (behavior == BlockPlaceBehavior.Place)
 			PlacementLogic();
@@ -90,22 +100,30 @@ public class BlockPlacement : MonoBehaviour {
 	}
 
 	void OnEnable(){
-		if (placementIndicator != null)
-			placementIndicator.SetActive(true);
+        if (!isLocalPlayer)
+            return;
+        if (placementIndicator != null)
+            SetIndicatorMode(behavior);
+			//placementIndicator.SetActive(true);
 	}
 
 	void OnDisable(){
-		//need to switch the appearance of the delete-highlighted block back to normal
-		if(currentDeleteTarget != null)
-			currentDeleteTarget.EditorChangeMaterial(null);
-		//and make the indicator disappear
-        if(placementIndicator != null)
-		    placementIndicator.SetActive(false);
+        if (!isLocalPlayer)
+            return;
+        //set the appearance of the delete-highlighted block back to normal
+        SetDeleteTarget(null);
+        //and make the indicator disappear
+        if (placementIndicator != null)
+            //placementIndicator.SetActive(false);
+            CmdSetActive(placementIndicator, false);
 	}
 
 	void OnDestroy(){
+        if (!isLocalPlayer)
+            return;
         if (placementIndicator != null)
-		    Destroy(placementIndicator);
+            CmdDestroy(placementIndicator);
+		    //Destroy(placementIndicator);
 	}
 
 
@@ -116,10 +134,12 @@ public class BlockPlacement : MonoBehaviour {
 	//for switching whether the system is placing or deleting blocks
 	void ModeControl(){
 		if (Input.GetKeyDown(modeSwitchKey)){
-			if (behavior == BlockPlaceBehavior.Place)
-				behavior = BlockPlaceBehavior.Delete;
-			else
-				behavior = BlockPlaceBehavior.Place;
+            if (behavior == BlockPlaceBehavior.Place)
+                behavior = BlockPlaceBehavior.Delete;
+            else {
+                SetDeleteTarget(null);
+                behavior = BlockPlaceBehavior.Place;
+            }
 		}
 		SetIndicatorMode(behavior);
 	}
@@ -128,7 +148,9 @@ public class BlockPlacement : MonoBehaviour {
 	//indicator in other modes
 	void SetIndicatorMode(BlockPlaceBehavior behaviorMode){
 		bool showIndicator = behaviorMode == BlockPlaceBehavior.Place;
-		placementIndicator.SetActive(showIndicator);
+		//placementIndicator.SetActive(showIndicator);
+        if(placementIndicator != null)
+            CmdSetActive(placementIndicator, showIndicator);
 	}
 
 	//=============================================================================================
@@ -139,6 +161,13 @@ public class BlockPlacement : MonoBehaviour {
 	void PlacementLogic(){
 		UserChangePlaceDist();
 		UserChangeBlockScale();
+
+        //since the reference to the indicator will come from the server, there may be a delay between the
+        //initialization of this object and getting the placement indicator reference back. Until we get it,
+        //just wait for now.
+        if (placementIndicator == null)
+            return;
+        
 		AdjustIndicatorScale(boxDimensions);
 		Vector3 placementPoint = SmartPlacementPoint();	//gets the location that a block would be placed, regardless of validity
 		AdjustIndicatorPosition(placementPoint);	//moves the indicator to this location
@@ -218,16 +247,16 @@ public class BlockPlacement : MonoBehaviour {
 
 	//spawns a block
 	void PlaceBlock(Vector3 placementPoint){
-		EnvironmentBlock block = Instantiate(blockPrefab, placementPoint, Quaternion.identity);
-		block.transform.localScale = boxDimensions;	//may need to be changed to a function within the environment block
-
+        //EnvironmentBlock block = Instantiate(blockPrefab, placementPoint, Quaternion.identity);
+        //block.transform.localScale = boxDimensions;	//may need to be changed to a function within the environment block
+        CmdSpawnBlock(placementPoint, Quaternion.identity, boxDimensions);
 	}
 
 	//destroys all dominos that overlap with the block's placement (this could be modified to destroy any toys that may be placed)
 	void DestroyOverlappingDominos(Vector3 placementPoint){
 		Collider[] overlappingDominos = BlockOverlapColliders(placementPoint, toyLayer);
 		foreach(Collider col in overlappingDominos){
-			Destroy(col.gameObject);
+			Destroy(col.gameObject);    //will need to be networked
 		}
 	}
 
@@ -329,8 +358,74 @@ public class BlockPlacement : MonoBehaviour {
 
 	//destroys a block
 	void DeleteBlock(EnvironmentBlock block){
-		Destroy(block.gameObject);
+		//Destroy(block.gameObject);
+        CmdDestroy(block.gameObject);
 	}
 
 
+    //=============================================================================================
+    // Network methods
+    //=============================================================================================
+
+    /// <summary>
+    /// This command instantiates the placement indicator for the player,
+    /// gives authority over it to the player, spawns it for all clients,
+    /// and finally sends back a reference to the object for the player to use.
+    /// 
+    /// This version does the instantiation on the server; next version
+    /// instantiates on the client
+    /// </summary>
+    [Command]
+    void CmdSpawnIndicator() {
+        RpcDebugOutput("CmdSpawnIndicator with conn: " + connectionToClient);
+        placementIndicator = Instantiate(indicatorPrefab);
+        indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
+        placementIndicator.transform.localScale = blockPrefab.transform.localScale;
+        placementIndicator.layer = LayerMask.NameToLayer("Ignore Raycast");
+
+        NetworkServer.SpawnWithClientAuthority(placementIndicator, connectionToClient);
+        //NetworkServer.Spawn(placementIndicator);
+        //NetworkIdentity identity = placementIndicator.GetComponent<NetworkIdentity>();
+        //identity.localPlayerAuthority = true;
+        //identity.AssignClientAuthority(connectionToClient);
+
+        TargetSpawnIndicator(connectionToClient, placementIndicator);
+    }
+
+    //this is the part of the above functionality that sends the reference to
+    //the game object back to the player
+    [TargetRpc]
+    void TargetSpawnIndicator(NetworkConnection target, GameObject spawnedIndicator) {
+        print("TargetSpawnIndicator with conn: " + target);
+        placementIndicator = spawnedIndicator;
+        indicatorRenderer = placementIndicator.GetComponent<MeshRenderer>();
+    }
+
+    [ClientRpc]
+    void RpcDebugOutput(string text) {
+        print(text);
+    }
+
+    [Command]   //I wonder; is it better practice to pass in the prefab anyway?
+    void CmdSpawnBlock(Vector3 point, Quaternion rotation, Vector3 scale) {
+        EnvironmentBlock block = Instantiate(blockPrefab, point, rotation);
+        block.transform.localScale = scale;
+        NetworkServer.Spawn(block.gameObject);
+    }
+
+    [Command]
+    void CmdSetActive(GameObject obj, bool active) {
+        obj.SetActive(active);
+        RpcSetActive(obj, active);
+    }
+
+    [ClientRpc]
+    void RpcSetActive(GameObject obj, bool active) {
+        obj.SetActive(active);
+    }
+
+    [Command]
+    void CmdDestroy(GameObject toDelete) {
+        NetworkServer.Destroy(toDelete);
+    }
 }

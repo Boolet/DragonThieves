@@ -9,6 +9,7 @@ public class ModeToggle : MonoBehaviour {
     DominoSpawnerTwo dominoSpawner;
     BlockPlacement blockSpawner;
     BlockFaceEditor faceEditor;
+    int mode = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -24,11 +25,12 @@ public class ModeToggle : MonoBehaviour {
 	}
 
     void SwitchMode() {
-        if (dominoSpawner.enabled) {
+        mode = (mode + 1) % 3;
+        if (mode == 0) {
             dominoSpawner.enabled = false;
             blockSpawner.enabled = true;
             faceEditor.enabled = false;
-        } else if (blockSpawner.enabled) {
+        } else if (mode == 1) {
             dominoSpawner.enabled = true;
             blockSpawner.enabled = false;
             faceEditor.enabled = false;

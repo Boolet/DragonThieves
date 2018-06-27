@@ -9,7 +9,6 @@ using UnityEngine.Networking;
 public class EnvironmentBlock : NetworkBehaviour {
 
 	Dictionary<Vector3, BlockFace> quadsDict = new Dictionary<Vector3, BlockFace>();
-    List<GameObject> attachedDominos = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () {
@@ -24,21 +23,9 @@ public class EnvironmentBlock : NetworkBehaviour {
 			kv.Value.SetMaterialOverride(editorOverride);
 	}
 
-    public void AddDomino(GameObject domino) {
-        attachedDominos.Add(domino);
-    }
-
-    public void RemoveDomino(GameObject domino) {
-        attachedDominos.Remove(domino);
-    }
-
-    private void OnDestroy() {
-        //destroy all attached dominos at the server if this block is destroyed
-        if (!isServer)
-            return;
-        GameObject[] dominosArray = attachedDominos.ToArray();
-        foreach (GameObject o in dominosArray) {
-            NetworkServer.Destroy(o);
-        }
+    //destroys the domino, if this is on the server
+    public void ServerDestroyAttachedDomino(GameObject domino) {
+        if(isServer)
+            NetworkServer.Destroy(domino);
     }
 }

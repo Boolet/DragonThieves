@@ -8,14 +8,14 @@ using UnityEngine;
 /// </summary>
 public class BlockLink : MonoBehaviour {
 
-    EnvironmentBlock block;
+    BlockFace face;
 
-    public void SetLink(EnvironmentBlock onBlock) {
-        block = onBlock;
+    public void SetLink(BlockFace onBlock) {
+        face = onBlock;
     }
 
     private void OnDestroy() {
-        if (block != null)
-            block.RemoveDomino(gameObject);
+        if (face != null)
+            face.RemoveDomino(gameObject);
     }
 }

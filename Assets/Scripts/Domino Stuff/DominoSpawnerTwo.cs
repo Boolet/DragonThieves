@@ -286,13 +286,13 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		grav.ServerSetGravity(gravity);
 		grav.RpcSetGravity(gravity);
 
-        //this part gives the block the domino was placed on a reference to the domino
+        //this part gives the face the domino was placed on a reference to the domino
         //so that if the block is deleted the domino can be removed too
         //note that this is server-side only
-        EnvironmentBlock block = onBlock.GetComponentInParent<EnvironmentBlock>();
-        if (block != null) {
-            block.AddDomino(grav.gameObject);   //give the block a reference to the domino
-            grav.GetComponent<BlockLink>().SetLink(block);  //and give the domino a reference to the block
+        BlockFace face = onBlock.GetComponent<BlockFace>();
+        if (face != null) {
+            face.AddDomino(grav.gameObject);   //give the block a reference to the domino
+            grav.GetComponent<BlockLink>().SetLink(face);  //and give the domino a reference to the block
         }
 	}
 

@@ -16,6 +16,8 @@ public class BlockFace : MonoBehaviour {
 	MeshRenderer meshRenderer;
 	Material correctMaterial;
 	Material overrideMaterial = null;	//for the editor
+    EnvironmentBlock block;
+    List<GameObject> attachedDominos = new List<GameObject>();
 
 	bool placeable = true;
 	public bool Placeable
@@ -32,8 +34,14 @@ public class BlockFace : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		meshRenderer = GetComponent<MeshRenderer>();
+        block = GetComponentInParent<EnvironmentBlock>();
 		PlaceableUpdate();
 	}
+
+    void OnDestroy() {
+        //destroy all attached dominos at the server if this block is destroyed
+        RemoveAllDominos();
+    }
 
 	void PlaceableUpdate(){
 		if (placeable){
@@ -42,6 +50,7 @@ public class BlockFace : MonoBehaviour {
 		} else{
 			correctMaterial = unplaceableMaterial;
 			gameObject.layer = unplaceableLayer;
+            RemoveAllDominos();
 		}
 		if (overrideMaterial == null)
 			meshRenderer.material = correctMaterial;
@@ -55,4 +64,26 @@ public class BlockFace : MonoBehaviour {
 		else
 			meshRenderer.material = correctMaterial;
 	}
+
+    //=============================================================================================
+    // attached domino functions
+    //=============================================================================================
+
+    public void AddDomino(GameObject domino) {
+        attachedDominos.Add(domino);
+    }
+
+    public void RemoveDomino(GameObject domino) {
+        attachedDominos.Remove(domino);
+    }
+
+    void RemoveAllDominos() {
+        if (block == null)
+            return;
+        GameObject[] dominosArray = attachedDominos.ToArray();
+        foreach (GameObject o in dominosArray) {
+            block.ServerDestroyAttachedDomino(o);
+        }
+        attachedDominos.Clear();
+    }
 }

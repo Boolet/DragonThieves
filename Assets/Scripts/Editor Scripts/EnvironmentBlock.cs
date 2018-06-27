@@ -36,7 +36,8 @@ public class EnvironmentBlock : NetworkBehaviour {
         //destroy all attached dominos at the server if this block is destroyed
         if (!isServer)
             return;
-        foreach (GameObject o in attachedDominos) {
+        GameObject[] dominosArray = attachedDominos.ToArray();
+        foreach (GameObject o in dominosArray) {
             NetworkServer.Destroy(o);
         }
     }

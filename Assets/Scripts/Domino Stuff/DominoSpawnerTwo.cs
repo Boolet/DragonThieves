@@ -147,7 +147,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 
 		if (canPlace && activate){
             //then spawn the domino
-            CmdSpawnDomino(placementPoint, placementRotation, -hit.normal);
+            CmdSpawnDomino(placementPoint, placementRotation, -hit.normal, hit.collider.gameObject);
 		}
 	}
 
@@ -235,9 +235,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 		if (newTarget == null)
 			return;
 		targetToDelete = newTarget;
-		MeshRenderer renderer = targetToDelete.GetComponent<MeshRenderer>();
-		targetOldMaterial = renderer.material;
-		renderer.material = noPlaceMaterial;
+        MeshRenderer mRenderer = targetToDelete.GetComponent<MeshRenderer>();
+		targetOldMaterial = mRenderer.material;
+		mRenderer.material = noPlaceMaterial;
 	}
 
     //=============================================================================================
@@ -280,12 +280,20 @@ public class DominoSpawnerTwo : NetworkBehaviour {
     }
 
 	[Command]
-	void CmdSpawnDomino(Vector3 point, Quaternion rotation, Vector3 gravity){
-		//bool reversed = Vector3.Angle(normal, gravity) > 90f;
+	void CmdSpawnDomino(Vector3 point, Quaternion rotation, Vector3 gravity, GameObject onBlock){
 		DominoGravity grav = Instantiate(dominoPrefab, point, rotation);
 		NetworkServer.Spawn(grav.gameObject);
 		grav.ServerSetGravity(gravity);
 		grav.RpcSetGravity(gravity);
+
+        //this part gives the block the domino was placed on a reference to the domino
+        //so that if the block is deleted the domino can be removed too
+        //note that this is server-side only
+        EnvironmentBlock block = onBlock.GetComponentInParent<EnvironmentBlock>();
+        if (block != null) {
+            block.AddDomino(grav.gameObject);   //give the block a reference to the domino
+            grav.GetComponent<BlockLink>().SetLink(block);  //and give the domino a reference to the block
+        }
 	}
 
     [Command]

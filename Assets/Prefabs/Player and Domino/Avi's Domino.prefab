@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 114537847355944904}
   - component: {fileID: 114769621247062666}
   - component: {fileID: 114064355006845828}
+  - component: {fileID: 114764486197876838}
   m_Layer: 9
   m_Name: Avi's Domino
   m_TagString: Domino
@@ -235,6 +236,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitByDomino: 0
+--- !u!114 &114764486197876838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1344954551852282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9725399e2df60c409223bf4392880c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isStartDomino: 0
+  _x: 100
+  _y: 0
+  _z: 0
+  rb: {fileID: 0}
+  canReset: 0
 --- !u!114 &114769621247062666
 MonoBehaviour:
   m_ObjectHideFlags: 1

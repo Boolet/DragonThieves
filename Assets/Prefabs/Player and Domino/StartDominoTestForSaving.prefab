@@ -92,6 +92,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 0456715e161d34affbf77ada222cd479, type: 2}
   m_StaticBatchInfo:
@@ -203,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9725399e2df60c409223bf4392880c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startDomino: {fileID: 0}
+  isStartDomino: 1
   _x: 100
   _y: 0
   _z: 0

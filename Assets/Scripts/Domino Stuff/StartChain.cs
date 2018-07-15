@@ -5,17 +5,23 @@ using UnityEngine.Networking;
 
 public class StartChain : NetworkBehaviour {
 
-    public GameObject startDomino;
-    public float _x = 100;
-    public float _y = 0;
-    public float _z = 0;
-    public Rigidbody rb;
-    public bool canReset = false;
+    [SerializeField] bool isStartDomino = false;
+
+    //public GameObject startDomino;
+    [HideInInspector] public float _x = 100;
+    [HideInInspector] public float _y = 0;
+    [HideInInspector] public float _z = 0;
+    [HideInInspector] public Rigidbody rb;
+    [HideInInspector] public bool canReset = false;
 
 	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
 	}
+
+    public void SetAsStarter(bool starter) {
+        isStartDomino = starter;
+    }
 
 	[ClientRpc]
 	public void RpcPlayerKnock(){
@@ -27,7 +33,8 @@ public class StartChain : NetworkBehaviour {
 
     void RpcKnockDomino(float x, float y, float z)
     {
-		rb.AddRelativeForce(x, y, z);
+        if(isStartDomino)
+		    rb.AddRelativeForce(x, y, z);
     }
 
 	[Server]

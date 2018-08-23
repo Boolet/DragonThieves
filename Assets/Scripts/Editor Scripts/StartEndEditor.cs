@@ -3,79 +3,93 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class BlockFaceEditor : NetworkBehaviour, IEditorMode {
+/// <summary>
+/// NOT FINISHED
+/// </summary>
+public class StartEndEditor : NetworkBehaviour, IEditorMode {
 
-    [SerializeField] float maxDistance;
+    [SerializeField] float maxDistance = 100f;
     [SerializeField] KeyCode activationButton = KeyCode.Mouse0;
-    [SerializeField] Material indicatorNoPlace;
-    [SerializeField] Material indicatorPlace;
+    [SerializeField] Material indicatorStart;
+    [SerializeField] Material indicatorEnd;
+    [SerializeField] Material indicatorNone;
     [SerializeField] LayerMask castObstructions;
-    [SerializeField] LayerMask faceLayers;
+    [SerializeField] LayerMask dominoLayer;
     [SerializeField] string modeName;
 
     Camera cameraObject = null;
-    BlockFace selectedFace = null;
+    Domino selectedDomino = null;
+    DominoMaterial materialOverride = null;
+    StartChain selectedStart = null;
+    EndChain selectedEnd = null;
     bool activeMode = false;
-
 
     //=============================================================================================
     // control
     //=============================================================================================
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         cameraObject = GetComponent<Camera>();
         if (cameraObject == null)
             cameraObject = GetComponentInChildren<Camera>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update() {
         if (!isLocalPlayer || !activeMode)
             return;
-        FaceBehavior(Input.GetKeyDown(activationButton));
-	}
+        DominoTypeEditBehavior(Input.GetKeyDown(activationButton));
+    }
 
     void OnDisable() {
-        AbandonFace();
+        AbandonDomino();
     }
 
     void OnDestroy() {
-        AbandonFace();
+        AbandonDomino();
     }
 
     public void ActivateMode(bool isActive) {   //IEditorMode
+        if (!isLocalPlayer)
+            return;
         activeMode = isActive;
         if (!activeMode)
-            AbandonFace();
+            AbandonDomino();
     }
 
-    public void RotateSubMode() { }  //IEditorMode
+    public void RotateSubMode() {}  //IEditorMode
 
     //=============================================================================================
     // face switching logic
     //=============================================================================================
 
-    void FaceBehavior(bool activate) {
+    void DominoTypeEditBehavior(bool activate) {
         RaycastHit hit;
         Vector3 miss;
         if (!CommonFunctions.CastFromCamera(out hit, out miss, cameraObject.transform, maxDistance, castObstructions))
-            AbandonFace();  //missed, so abandon the last face
+            AbandonDomino();  //missed, so abandon the last face
 
-        else if (((1 << hit.collider.gameObject.layer) & faceLayers.value) != 0) {
-            //if it is a block face, we should select it
-            AdoptFace(hit.collider.GetComponent<BlockFace>());
+        else if (((1 << hit.collider.gameObject.layer) & dominoLayer.value) != 0) {
+            //if it is a domino, we should select it
+            AdoptDomino(hit.collider.GetComponent<Domino>());
             if (activate)
-                ToggleFacePlacement();
-        }
-
-        else
-            AbandonFace();
+                ToggleDominoMode();
+        } else
+            AbandonDomino();
     }
 
     //switches the face's placement mode and updates the indicator material
-    void ToggleFacePlacement() {
-        selectedFace.Placeable = !selectedFace.Placeable;
+    void ToggleDominoMode() {
+        //cycling backwards up this if-else block (default->start->end->repeat)
+        if (selectedEnd.IsEndDomino) {
+            selectedEnd.IsEndDomino = false;    //become neither if end
+        } else if (selectedStart.IsStartDomino) {
+            selectedStart.IsStartDomino = false;    //become end domino if start
+            selectedEnd.IsEndDomino = true;
+        } else {
+            selectedStart.IsStartDomino = true; //become start domino if neither
+        }
         SetCorrectIndicatorColor();
     }
 
@@ -86,34 +100,41 @@ public class BlockFaceEditor : NetworkBehaviour, IEditorMode {
 
     //sets the face's material back to what it was before it was selected
     void RestoreAppearance() {
-        if (selectedFace != null)
-            selectedFace.SetMaterialOverride(null);
+        if (selectedDomino != null)
+            materialOverride.SetMaterialOverride(null);
     }
 
     //stops keeping track of the targetToDelete and restores its appearance
-    void AbandonFace() {
+    void AbandonDomino() {
         RestoreAppearance();
-        selectedFace = null;
+        selectedDomino = null;
     }
 
     //chooses a new domino to be the delete target and changes its material to the noPlace material
-    void AdoptFace(BlockFace newTarget) {
-        if (selectedFace == newTarget)
+    void AdoptDomino(Domino newTarget) {
+        if (selectedDomino == newTarget)
             return;
-        AbandonFace();
+        AbandonDomino();
         if (newTarget == null)
             return;
-        selectedFace = newTarget;
+        selectedDomino = newTarget;
+
+        materialOverride = selectedDomino.GetComponent<DominoMaterial>();
+        selectedEnd = selectedDomino.GetComponent<EndChain>();
+        selectedStart = selectedDomino.GetComponent<StartChain>();
+
         //change its appearance
         SetCorrectIndicatorColor();
     }
 
     //sets the material of the selected face depending on whether that face can have dominos placed on it
     void SetCorrectIndicatorColor() {
-        if (selectedFace.Placeable) {
-            selectedFace.SetMaterialOverride(indicatorPlace);
+        if (selectedEnd.IsEndDomino) {
+            materialOverride.SetMaterialOverride(indicatorEnd);
+        } else if (selectedStart.IsStartDomino) {
+            materialOverride.SetMaterialOverride(indicatorStart);
         } else {
-            selectedFace.SetMaterialOverride(indicatorNoPlace);
+            materialOverride.SetMaterialOverride(indicatorNone);
         }
     }
 

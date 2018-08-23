@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//change this to use an array of arrays of varying lengths, each containing
+//different behaviors. 
+
 public class ModeToggle : MonoBehaviour {
 
     [SerializeField] KeyCode switchKey = KeyCode.Tab;

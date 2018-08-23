@@ -21,7 +21,7 @@ using UnityEngine.Networking;
 /// Usage:
 /// Attach to player object; it or its child should have the camera attached
 /// </summary>
-public class BlockPlacement : NetworkBehaviour {
+public class BlockPlacement : NetworkBehaviour, IEditorMode {
 
 	//necessary referenes
 	[SerializeField] EnvironmentBlock blockPrefab;
@@ -44,6 +44,7 @@ public class BlockPlacement : NetworkBehaviour {
 	[SerializeField] LayerMask castObstructions;	//objects that can block the player's interaction path
 	[SerializeField] LayerMask placementObstructions;	//objects that prevent block placement
 	[SerializeField] LayerMask toyLayer;	//the domino layer (but really all toy layers that should be deleted when a block is placed)
+    [SerializeField] string modeName;
 
 	//maybe also have a reference to a HUD for this
 
@@ -58,6 +59,7 @@ public class BlockPlacement : NetworkBehaviour {
 	Vector3 boxDimensions = Vector3.one;
 	BlockPlaceBehavior behavior = BlockPlaceBehavior.Place;
 	EnvironmentBlock currentDeleteTarget = null;
+    bool activeMode = false;
 
 
 	//=============================================================================================
@@ -90,9 +92,9 @@ public class BlockPlacement : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || !activeMode)
             return;
-		ModeControl();
+		//ModeControl();    //this was used for local input instead of the mode manager
 		if (behavior == BlockPlaceBehavior.Place)
 			PlacementLogic();
 		else
@@ -100,22 +102,11 @@ public class BlockPlacement : NetworkBehaviour {
 	}
 
 	void OnEnable(){
-        if (!isLocalPlayer)
-            return;
-        if (placementIndicator != null)
-            SetIndicatorMode(behavior);
-			//placementIndicator.SetActive(true);
+        Activate();
 	}
 
 	void OnDisable(){
-        if (!isLocalPlayer)
-            return;
-        //set the appearance of the delete-highlighted block back to normal
-        SetDeleteTarget(null);
-        //and make the indicator disappear
-        if (placementIndicator != null)
-            //placementIndicator.SetActive(false);
-            CmdSetActive(placementIndicator, false);
+        Deactivate();
 	}
 
 	void OnDestroy(){
@@ -126,21 +117,60 @@ public class BlockPlacement : NetworkBehaviour {
 		    //Destroy(placementIndicator);
 	}
 
+    //if this is the local player, sets the indicator to be the correct visibility
+    void Activate() {
+        if (!isLocalPlayer)
+            return;
+        if (placementIndicator != null)
+            SetIndicatorMode(behavior);
+        //placementIndicator.SetActive(true);
+        else
+            CmdSpawnIndicator();
+    }
+
+    //if this is the local player, sets the indicator to be disabled
+    //and relinquishes the target block
+    void Deactivate() {
+        if (!isLocalPlayer)
+            return;
+        SetDeleteTarget(null);
+        if (placementIndicator != null)
+            CmdSetActive(placementIndicator, false);
+            //placementIndicator.SetActive(false);
+    }
+
+    public void ActivateMode(bool isActive) {   //IEditorMode
+        if (!isLocalPlayer)
+            return;
+        activeMode = isActive;
+        if (!activeMode)
+            Deactivate();
+        else
+            Activate();
+    }
+
+    public void RotateSubMode() {   //IEditorMode
+        if (!isLocalPlayer)
+            return;
+        ModeControl();
+    }
+
 
 	//=============================================================================================
 	// Mode switching
 	//=============================================================================================
 
 	//for switching whether the system is placing or deleting blocks
+    //the commented code in the method was for local input instead of using the mode manager
 	void ModeControl(){
-		if (Input.GetKeyDown(modeSwitchKey)){
+		//if (Input.GetKeyDown(modeSwitchKey)){
             if (behavior == BlockPlaceBehavior.Place)
                 behavior = BlockPlaceBehavior.Delete;
             else {
                 SetDeleteTarget(null);
                 behavior = BlockPlaceBehavior.Place;
             }
-		}
+		//}
 		SetIndicatorMode(behavior);
 	}
 
@@ -427,5 +457,13 @@ public class BlockPlacement : NetworkBehaviour {
     [Command]
     void CmdDestroy(GameObject toDelete) {
         NetworkServer.Destroy(toDelete);
+    }
+
+    //=============================================================================================
+    // UI methods
+    //=============================================================================================
+
+    public string ModeName() {
+        return modeName;
     }
 }

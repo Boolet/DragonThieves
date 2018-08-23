@@ -3,9 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Script that allows the player to knock down this domino to start.
+/// 
+/// I should add functionality to bind the appearance of the domino
+/// to the isStartDomino state.
+/// </summary>
+[RequireComponent(typeof(DominoMaterial))]
 public class StartChain : NetworkBehaviour {
 
-    [SerializeField] bool isStartDomino = false;
+    [SerializeField] Material startMaterial;
+
+    DominoMaterial materialManager;
+    bool isStartDomino = false;
+    public bool IsStartDomino {
+        get { return isStartDomino; }
+        set{
+            if (value) {
+                EndChain thisEnd = GetComponent<EndChain>();
+                if (thisEnd && thisEnd.IsEndDomino) {
+                    thisEnd.IsEndDomino = false;
+                }
+                materialManager.SetCorrectMaterial(startMaterial);
+            } else
+                materialManager.SetCorrectMaterial(null);
+            isStartDomino = value;
+        }
+    }
 
     //public GameObject startDomino;
     [HideInInspector] public float _x = 100;
@@ -17,11 +41,8 @@ public class StartChain : NetworkBehaviour {
 	void Awake ()
     {
         rb = GetComponent<Rigidbody>();
+        materialManager = GetComponent<DominoMaterial>();
 	}
-
-    public void SetAsStarter(bool starter) {
-        isStartDomino = starter;
-    }
 
 	[ClientRpc]
 	public void RpcPlayerKnock(){

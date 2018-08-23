@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class DominoSpawnerTwo : NetworkBehaviour {
+public class DominoSpawnerTwo : NetworkBehaviour, IEditorMode {
 
 	[SerializeField] Camera cameraObject;
 	//[SerializeField] Vector3 gravityDirection = Vector3.down;		//the gravity thing will be dealt with later
@@ -16,6 +16,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	[SerializeField] LayerMask dominoTargets;
 	[SerializeField] float rotationSensitivity = 2f;
 	[SerializeField] float placeDistance = 10f;
+    [SerializeField] string modeName;
 
 	GameObject placementIndicator;
 	MeshRenderer indicatorRenderer;
@@ -25,6 +26,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	GameObject targetToDelete = null;
 	Material targetOldMaterial;	//note: give the domino script a reference to the meshrenderer component to make this easier and faster
 
+    bool activeMode = false;
 
     //=============================================================================================
 	// control
@@ -38,7 +40,7 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	}
 
     void Update() {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || !activeMode)
             return;
         //run functionality
         float scroll = Input.mouseScrollDelta.y;
@@ -48,6 +50,20 @@ public class DominoSpawnerTwo : NetworkBehaviour {
     }
 
     void OnEnable(){
+        Activate();
+	}
+
+	void OnDisable(){
+        Deactivate();
+	}
+
+    void OnDestroy(){
+        if (!isLocalPlayer)
+            return;
+        //CmdDestroy(placementIndicator);
+    }
+
+    void Activate() {
         if (!isLocalPlayer)
             return;
         if (placementIndicator != null)
@@ -55,9 +71,9 @@ public class DominoSpawnerTwo : NetworkBehaviour {
             //placementIndicator.SetActive(true);
         //else
             //SpawnIndicator();
-	}
+    }
 
-	void OnDisable(){
+    void Deactivate() {
         if (!isLocalPlayer)
             return;
         //need to switch the appearance of the delete-highlighted domino back to normal
@@ -66,13 +82,19 @@ public class DominoSpawnerTwo : NetworkBehaviour {
         if (placementIndicator != null)
             CmdSetActive(placementIndicator, false);
             //placementIndicator.SetActive(false);
-	}
+    }
 
-    void OnDestroy(){
+    public void ActivateMode(bool isActive) {   //IEditorMode
         if (!isLocalPlayer)
             return;
-        //CmdDestroy(placementIndicator);
+        activeMode = isActive;
+        if (!activeMode)
+            Deactivate();
+        else
+            Activate();
     }
+
+    public void RotateSubMode() { }  //IEditorMode
 
     //=============================================================================================
     // initialization functions
@@ -311,4 +333,12 @@ public class DominoSpawnerTwo : NetworkBehaviour {
 	void CmdDestroy(GameObject toDelete){
 		NetworkServer.Destroy(toDelete);
 	}
+
+    //=============================================================================================
+    // UI methods
+    //=============================================================================================
+
+    public string ModeName() {
+        return modeName;
+    }
 }
